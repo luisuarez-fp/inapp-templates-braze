@@ -1,0 +1,135 @@
+/*
+ * Pikaso Design System Tokens — Braze Templates Reference
+ * =======================================================
+ * This file serves as a reference for the resolved design token values
+ * used across all Braze Custom HTML In-App Message templates.
+ *
+ * Design source: Figma CRM - Inapps (node 30-291)
+ *
+ * Since Braze renders custom HTML inside an iframe, the app's CSS custom
+ * properties are NOT inherited. Each template must inline these values.
+ *
+ * Source files:
+ *   - frontend/code/apps/core/tailwind/tailwind.css  (CSS custom properties)
+ *   - frontend/code/apps/pikaso/src/perita-tailwind-config/shared/tokens.ts
+ *   - frontend/code/apps/core/tailwind/tailwind.config.ts
+ */
+
+/* =========================================================================
+   FONTS
+   ========================================================================= */
+
+@font-face {
+  font-family: 'Inter';
+  src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
+       url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff2') format('woff2'),
+       url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('https://pikaso.cdnpk.net/public/media/Inter-Bold.woff2') format('woff2'),
+       url('https://pikaso.cdnpk.net/public/media/Inter-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================================================================
+   DESIGN TOKENS — Modal (Figma: CRM - Inapps)
+   =========================================================================
+   The modal content area uses a fixed dark background, independent of the
+   app's light/dark theme. This ensures consistent appearance regardless of
+   the user's current theme setting.
+   ========================================================================= */
+
+:root {
+  /* Modal structure */
+  --modal-overlay: hsla(0, 0%, 0%, 0.5);
+  --modal-radius: 12px;
+  --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --modal-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --modal-max-width: 360px;
+
+  /* Content area — always dark (from Figma design) */
+  --modal-content-bg: #0d0d0d;            /* neutral-900 */
+  --modal-title-color: #f7f7f7;           /* neutral-50 */
+  --modal-text-color: #b1b1b1;            /* neutral-400 */
+
+  /* CTA button — white on dark */
+  --modal-cta-bg: #ffffff;
+  --modal-cta-bg-hover: #e5e5e5;          /* neutral-100 */
+  --modal-cta-bg-active: #d8d8d8;         /* neutral-200 */
+  --modal-cta-color: #0d0d0d;             /* neutral-900 */
+
+  /* Close button — semi-transparent dark with blur */
+  --modal-close-bg: rgba(0, 0, 0, 0.3);
+  --modal-close-bg-hover: rgba(0, 0, 0, 0.5);
+  --modal-close-color: #ffffff;
+
+  /* Typography */
+  --modal-font-size-xs: 0.75rem;          /* 12px */
+  --modal-font-size-sm: 0.875rem;         /* 14px */
+  --modal-font-size-base: 1rem;           /* 16px */
+  --modal-font-size-lg: 1.125rem;         /* 18px */
+  --modal-font-size-xl: 1.25rem;          /* 20px */
+  --modal-font-size-2xl: 1.5rem;          /* 24px */
+  --modal-line-height-tight: 1.2;
+  --modal-line-height-snug: 1.4;
+  --modal-line-height-normal: 1.6;
+
+  /* =====================================================================
+     Additional tokens (for future template variants)
+     ===================================================================== */
+
+  /* Primary (piki-blue) — for alternate CTA styles */
+  --color-primary: hsl(222, 81%, 56%);      /* piki-blue-500 */
+  --color-primary-hover: hsl(222, 64%, 45%); /* piki-blue-600 approx */
+  --color-primary-fg: #ffffff;
+
+  /* Semantic */
+  --color-positive: #328400;
+  --color-warning: #FFD600;
+  --color-negative: #E42900;
+
+  /* Premium gold */
+  --color-premium: #FEB602;
+  --color-premium-hover: #F4980A;
+  --color-premium-fg: #0d0d0d;
+
+  /* Neutral palette (from Pikaso tokens.ts) */
+  --color-neutral-50: #f7f7f7;
+  --color-neutral-100: #E5E5E5;
+  --color-neutral-200: #d8d8d8;
+  --color-neutral-300: #c8c8c8;
+  --color-neutral-400: #b1b1b1;
+  --color-neutral-500: #9c9c9c;
+  --color-neutral-600: #777777;
+  --color-neutral-700: #5b5b5b;
+  --color-neutral-800: #424242;
+  --color-neutral-900: #0d0d0d;
+
+  /* App surface tokens — resolved values for reference */
+  /* Light theme */
+  --surface-light-bg: hsl(0, 0%, 100%);
+  --surface-light-fg: hsl(0, 0%, 5%);
+  --surface-light-fg-secondary: hsl(0, 0%, 36%);
+  --surface-light-modal: hsl(0, 0%, 100%);
+
+  /* Dark theme */
+  --surface-dark-bg: hsl(0, 0%, 6%);
+  --surface-dark-fg: hsl(0, 0%, 97%);
+  --surface-dark-fg-secondary: hsl(0, 0%, 69%);
+  --surface-dark-modal: hsl(0, 0%, 12%);
+}

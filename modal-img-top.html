@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  /* =======================================================================
+     Pikaso Design Tokens — Inlined for Braze iframe isolation
+     Based on Figma: CRM - Inapps (node 30-291)
+     Theme-aware: detects light/dark from parent app
+     ======================================================================= */
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* =====================================================================
+     Light theme (default)
+     Resolved from: frontend/code/apps/core/tailwind/tailwind.css :root
+     ===================================================================== */
+  :root {
+    /* Modal structure */
+    --modal-overlay: hsla(0, 0%, 0%, 0.5);
+    --modal-radius: 24px;
+    --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --modal-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --modal-max-width: 600px;
+
+    /* Surface — from --surface-modal */
+    --modal-bg: hsl(0, 0%, 100%);
+
+    /* Foregrounds — from --surface-foreground-* */
+    --modal-title-color: hsl(0, 0%, 5%);
+    --modal-text-color: hsl(0, 0%, 36%);
+
+    /* CTA button — from --secondary-* (dark bg, white text in light mode) */
+    --modal-cta-bg: hsl(0, 0%, 5%);
+    --modal-cta-bg-hover: hsl(0, 0%, 26%);
+    --modal-cta-bg-active: hsl(0, 0%, 36%);
+    --modal-cta-color: hsl(0, 0%, 100%);
+
+    /* Border — #0D0D0D at 20% opacity, inside */
+    --modal-border: rgba(13, 13, 13, 0.2);
+
+    /* Close button — from --default-* (neutral, theme-aware) */
+    --modal-close-bg: hsla(0, 0%, 47%, 0.1);
+    --modal-close-bg-hover: hsla(0, 0%, 47%, 0.15);
+    --modal-close-color: hsl(0, 0%, 5%);
+  }
+
+  /* =====================================================================
+     Dark theme
+     Resolved from: frontend/code/apps/core/tailwind/tailwind.css .dark
+     ===================================================================== */
+  .dark {
+    --modal-bg: hsl(0, 0%, 12%);
+
+    --modal-title-color: hsl(0, 0%, 97%);
+    --modal-text-color: hsl(0, 0%, 69%);
+
+    --modal-cta-bg: hsl(0, 0%, 97%);
+    --modal-cta-bg-hover: hsl(0, 0%, 90%);
+    --modal-cta-bg-active: hsl(0, 0%, 85%);
+    --modal-cta-color: hsl(0, 0%, 5%);
+
+    --modal-border: hsla(0, 0%, 100%, 0.2);
+
+    --modal-close-bg: hsla(0, 0%, 100%, 0.1);
+    --modal-close-bg-hover: hsla(0, 0%, 100%, 0.15);
+    --modal-close-color: hsl(0, 0%, 97%);
+  }
+
+  /* =======================================================================
+     Reset & Base
+     ======================================================================= */
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--modal-font);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* =======================================================================
+     Overlay
+     ======================================================================= */
+
+  .braze-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-overlay);
+    z-index: 9999;
+    padding: 16px;
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  /* =======================================================================
+     Modal Card
+     ======================================================================= */
+
+  .braze-modal-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: var(--modal-max-width);
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(12px);
+    animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+  }
+
+  .braze-modal {
+    position: relative;
+    width: 100%;
+    max-height: 90vh;
+    background: var(--modal-bg);
+    border-radius: var(--modal-radius);
+    box-shadow: var(--modal-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .braze-modal::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--modal-radius);
+    box-shadow: inset 0 0 0 1px var(--modal-border);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* =======================================================================
+     Hero Image
+     ======================================================================= */
+
+  .braze-modal__image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .braze-modal__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* =======================================================================
+     Close Button — outside the card, top-right, 8px from modal edge
+     ======================================================================= */
+
+  .braze-modal__close {
+    position: absolute;
+    top: 0;
+    right: -40px; /* 32px button + 8px gap */
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-close-bg);
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .braze-modal__close:hover {
+    background: var(--modal-close-bg-hover);
+  }
+
+  .braze-modal__close svg {
+    width: 14px;
+    height: 14px;
+    color: var(--modal-close-color);
+  }
+
+  /* =======================================================================
+     Content
+     ======================================================================= */
+
+  .braze-modal__content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+  }
+
+  .braze-modal__title {
+    font-size: 1.125rem;       /* text-lg */
+    font-weight: 600;          /* font-semibold */
+    line-height: 1.5;          /* lineHeight.snug */
+    color: var(--modal-title-color);
+  }
+
+  .braze-modal__text {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--modal-text-color);
+  }
+
+  /* =======================================================================
+     CTA Button — inside content area, right-aligned
+     ======================================================================= */
+
+  .braze-modal__cta-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 8px;
+  }
+
+  .braze-modal__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;              /* h-10 (md size) */
+    padding: 0 16px;           /* px-4 (md size) */
+    font-family: var(--modal-font);
+    font-size: 0.875rem;       /* text-sm (md size) */
+    font-weight: 600;          /* font-semibold */
+    line-height: 1;
+    color: var(--modal-cta-color);
+    background: var(--modal-cta-bg);
+    border: none;
+    border-radius: 8px;        /* rounded-lg */
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease-in-out;  /* duration-150 */
+    white-space: nowrap;
+  }
+
+  .braze-modal__cta:hover {
+    background: var(--modal-cta-bg-hover);
+  }
+
+  .braze-modal__cta:active {
+    background: var(--modal-cta-bg-active);
+  }
+
+  /* =======================================================================
+     Animations
+     ======================================================================= */
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(12px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes scaleOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(12px);
+    }
+  }
+
+  .braze-modal-overlay--closing {
+    animation: fadeOut 0.15s ease-in forwards;
+  }
+
+  .braze-modal-overlay--closing .braze-modal-wrapper {
+    animation: scaleOut 0.15s ease-in forwards;
+  }
+
+  /* =======================================================================
+     Responsive
+     ======================================================================= */
+
+  @media (max-width: 640px) {
+    .braze-modal__content {
+      padding: 20px 16px;
+    }
+
+    .braze-modal__title {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 425px) {
+    .braze-modal-wrapper {
+      max-width: 100%;
+    }
+
+    .braze-modal__close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+  <!--
+    Braze Custom HTML In-App Message Template: Default Modal
+    =========================================================
+    Design source: Figma CRM - Inapps (node 30-291)
+    Theme: auto-detects light/dark from parent app
+    Translations: Lokalise via connected_content (built-in)
+
+    To use this template:
+      1. Replace TITLE_KEY, MESSAGE_KEY, CTA_KEY below with your Lokalise keys
+      2. Set ${image_url}, ${image_alt}, ${cta_url} as Braze message extras
+
+    Example keys: 2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Title
+  -->
+
+  <!-- =====================================================================
+       Lokalise translations: user language + English fallback (2 requests max).
+       Cached for 1h (cache_max_age 3600). Aborts if EN fallback fails.
+       Language detected via Braze ${language} attribute (set by setLanguage() in app).
+       ===================================================================== -->
+  {%- assign lang = ${language} | default: 'en' -%}
+  {%- case lang -%}
+    {%- when 'es' -%}{%- assign lok_lang = 'es_ES' -%}
+    {%- when 'pt' -%}{%- assign lok_lang = 'pt_BR' -%}
+    {%- when 'de' -%}{%- assign lok_lang = 'de_DE' -%}
+    {%- when 'fr' -%}{%- assign lok_lang = 'fr_FR' -%}
+    {%- when 'it' -%}{%- assign lok_lang = 'it_IT' -%}
+    {%- when 'ru' -%}{%- assign lok_lang = 'ru_RU' -%}
+    {%- when 'ja' -%}{%- assign lok_lang = 'ja_JP' -%}
+    {%- when 'ko' -%}{%- assign lok_lang = 'ko_KR' -%}
+    {%- when 'nl' -%}{%- assign lok_lang = 'nl_NL' -%}
+    {%- when 'pl' -%}{%- assign lok_lang = 'pl_PL' -%}
+    {%- when 'zh' -%}{%- assign lok_lang = 'zh_HK' -%}
+    {%- when 'hi' -%}{%- assign lok_lang = 'hi_IN' -%}
+    {%- when 'cs' -%}{%- assign lok_lang = 'cs_CZ' -%}
+    {%- when 'da' -%}{%- assign lok_lang = 'da_DK' -%}
+    {%- when 'fi' -%}{%- assign lok_lang = 'fi_FI' -%}
+    {%- when 'nb' -%}{%- assign lok_lang = 'nb_NO' -%}
+    {%- when 'sv' -%}{%- assign lok_lang = 'sv_SE' -%}
+    {%- when 'tr' -%}{%- assign lok_lang = 'tr_TR' -%}
+    {%- when 'id' -%}{%- assign lok_lang = 'id_ID' -%}
+    {%- when 'vi' -%}{%- assign lok_lang = 'vi_VN' -%}
+    {%- when 'th' -%}{%- assign lok_lang = 'th_TH' -%}
+    {%- else -%}{%- assign lok_lang = 'en' -%}
+  {%- endcase -%}
+  {%- assign base = 'https://exports.live.lokalise.cloud/braze/64903509694141adaff9b6.83125809/a4597de8e0ea203a9d9cc0266d7f1fed9fa4a0c1/' -%}
+  {%- connected_content {{ base }}en.json :save t_en :cache_max_age 3600 -%}
+  {%- if t_en == null -%}{%- abort_message("Lokalise EN fallback failed") -%}{%- endif -%}
+  {%- if lok_lang != 'en' -%}
+    {%- assign json_url = base | append: lok_lang | append: '.json' -%}
+    {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
+  {%- else -%}
+    {%- assign t = t_en -%}
+  {%- endif -%}
+
+  <div class="braze-modal-overlay" id="brazeModalOverlay">
+    <div class="braze-modal-wrapper">
+
+      <!-- Close Button — outside card, top-right -->
+      <button
+        class="braze-modal__close"
+        id="brazeModalClose"
+        aria-label="Close"
+        type="button"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="4" x2="12" y2="12" />
+          <line x1="12" y1="4" x2="4" y2="12" />
+        </svg>
+      </button>
+
+      <div class="braze-modal" role="dialog" aria-modal="true" aria-labelledby="brazeModalTitle">
+
+        <!-- Hero Image (set via Braze message extras) -->
+        <div class="braze-modal__image-wrapper">
+          <img
+            class="braze-modal__image"
+            src="https://cdn.braze.eu/appboy/communication/assets/image_assets/images/69945953c1627f4106e11467/original.png?1771329875"
+            alt="${image_alt}"
+            loading="eager"
+          />
+        </div>
+
+        <div class="braze-modal__content">
+          <h2 class="braze-modal__title" id="brazeModalTitle">{{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Title_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Title_v1 }}</h2>
+          <p class="braze-modal__text">{{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Text_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Text_v1 }}</p>
+          <div class="braze-modal__cta-wrapper">
+            <a
+              class="braze-modal__cta"
+              id="brazeModalCta"
+              href="/pikaso/spaces"
+              role="button"
+            >
+              {{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_CTA_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_CTA_v1 }}
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      /* -----------------------------------------------------------------
+         Theme detection
+         Reads the parent document's <html> class to match the app theme.
+         Falls back to light mode if parent is inaccessible (cross-origin).
+         ----------------------------------------------------------------- */
+      try {
+        var parentDoc = window.parent.document.documentElement;
+        if (parentDoc && parentDoc.classList.contains('dark')) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {
+        // Cross-origin — default to light theme
+      }
+
+      /* -----------------------------------------------------------------
+         Close modal with animation
+         ----------------------------------------------------------------- */
+      function closeModal() {
+        var overlay = document.getElementById('brazeModalOverlay');
+        if (!overlay) return;
+
+        overlay.classList.add('braze-modal-overlay--closing');
+
+        overlay.addEventListener('animationend', function () {
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.closeMessage();
+          }
+        });
+
+        setTimeout(function () {
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.closeMessage();
+          }
+        }, 300);
+      }
+
+      /* -----------------------------------------------------------------
+         Close button
+         ----------------------------------------------------------------- */
+      var closeBtn = document.getElementById('brazeModalClose');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          closeModal();
+        });
+      }
+
+      /* -----------------------------------------------------------------
+         Overlay click (click outside to close)
+         ----------------------------------------------------------------- */
+      var overlay = document.getElementById('brazeModalOverlay');
+      if (overlay) {
+        overlay.addEventListener('click', function (e) {
+          if (e.target === overlay) {
+            closeModal();
+          }
+        });
+      }
+
+      /* -----------------------------------------------------------------
+         CTA button — log click and navigate
+         ----------------------------------------------------------------- */
+      var ctaBtn = document.getElementById('brazeModalCta');
+      if (ctaBtn) {
+        ctaBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var url = ctaBtn.getAttribute('href');
+
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.logClick();
+          }
+
+          if (url && url !== '${cta_url}' && url.trim() !== '') {
+            window.parent.location.href = url;
+          }
+
+          closeModal();
+        });
+      }
+
+      /* -----------------------------------------------------------------
+         Escape key to close
+         ----------------------------------------------------------------- */
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

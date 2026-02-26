@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  /* =======================================================================
+     Pikaso Design Tokens — modal_img_50_50 preview
+     ======================================================================= */
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --modal-overlay: hsla(0, 0%, 0%, 0.5);
+    --modal-radius: 24px;
+    --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --modal-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --modal-max-width: 768px;
+
+    --modal-bg: hsl(0, 0%, 100%);
+    --modal-title-color: hsl(0, 0%, 5%);
+    --modal-text-color: hsl(0, 0%, 36%);
+
+    --modal-cta-bg: hsl(0, 0%, 5%);
+    --modal-cta-bg-hover: hsl(0, 0%, 26%);
+    --modal-cta-bg-active: hsl(0, 0%, 36%);
+    --modal-cta-color: hsl(0, 0%, 100%);
+
+    --modal-border: rgba(13, 13, 13, 0.2);
+
+    --modal-close-bg: hsla(0, 0%, 47%, 0.1);
+    --modal-close-bg-hover: hsla(0, 0%, 47%, 0.15);
+    --modal-close-color: hsl(0, 0%, 5%);
+  }
+
+  .dark {
+    --modal-bg: hsl(0, 0%, 12%);
+    --modal-title-color: hsl(0, 0%, 97%);
+    --modal-text-color: hsl(0, 0%, 69%);
+    --modal-cta-bg: hsl(0, 0%, 97%);
+    --modal-cta-bg-hover: hsl(0, 0%, 90%);
+    --modal-cta-bg-active: hsl(0, 0%, 85%);
+    --modal-cta-color: hsl(0, 0%, 5%);
+    --modal-border: hsla(0, 0%, 100%, 0.2);
+    --modal-close-bg: hsla(0, 0%, 100%, 0.1);
+    --modal-close-bg-hover: hsla(0, 0%, 100%, 0.15);
+    --modal-close-color: hsl(0, 0%, 97%);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--modal-font);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .braze-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-overlay);
+    z-index: 9999;
+    padding: 16px;
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  .braze-modal-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: var(--modal-max-width);
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(12px);
+    animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+  }
+
+  .braze-modal {
+    position: relative;
+    width: 100%;
+    max-height: 90vh;
+    background: var(--modal-bg);
+    border-radius: var(--modal-radius);
+    box-shadow: var(--modal-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .braze-modal::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--modal-radius);
+    box-shadow: inset 0 0 0 1px var(--modal-border);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .braze-modal__image-wrapper {
+    position: relative;
+    width: 50%;
+    min-height: 600px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .braze-modal__image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  .braze-modal__close {
+    position: absolute;
+    top: 0;
+    right: -40px;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-close-bg);
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .braze-modal__close:hover { background: var(--modal-close-bg-hover); }
+  .braze-modal__close svg { width: 14px; height: 14px; color: var(--modal-close-color); }
+
+  .braze-modal__content {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    justify-content: flex-start;
+  }
+
+  .braze-modal__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--modal-title-color);
+  }
+
+  .braze-modal__text {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--modal-text-color);
+  }
+
+  .braze-modal__list {
+    list-style: disc;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .braze-modal__list li {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--modal-text-color);
+  }
+
+  .braze-modal__cta-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  .braze-modal__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 16px;
+    font-family: var(--modal-font);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--modal-cta-color);
+    background: var(--modal-cta-bg);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease-in-out;
+    white-space: nowrap;
+  }
+
+  .braze-modal__cta:hover { background: var(--modal-cta-bg-hover); }
+  .braze-modal__cta:active { background: var(--modal-cta-bg-active); }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); filter: blur(12px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+  }
+  @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes scaleOut {
+    from { opacity: 1; transform: scale(1); filter: blur(0); }
+    to { opacity: 0; transform: scale(0.95); filter: blur(12px); }
+  }
+
+  .braze-modal-overlay--closing { animation: fadeOut 0.15s ease-in forwards; }
+  .braze-modal-overlay--closing .braze-modal-wrapper { animation: scaleOut 0.15s ease-in forwards; }
+
+  @media (max-width: 840px) {
+    .braze-modal__close { position: absolute; top: 8px; right: 8px; z-index: 10; }
+  }
+
+  @media (max-width: 640px) {
+    .braze-modal { flex-direction: column; }
+    .braze-modal__image-wrapper { width: 100%; min-height: auto; max-height: 200px; }
+    .braze-modal__image { position: static; height: auto; max-height: 200px; }
+    .braze-modal__content { padding: 20px 16px; }
+    .braze-modal__title { font-size: 1rem; }
+  }
+
+  @media (max-width: 425px) {
+    .braze-modal-wrapper { max-width: 100%; }
+  }
+
+  /* Preview controls */
+  .preview-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 99999;
+    display: flex; gap: 8px;
+  }
+  .preview-controls button {
+    padding: 8px 16px; border: none; border-radius: 8px;
+    font-family: var(--modal-font); font-size: 13px; font-weight: 600;
+    cursor: pointer;
+  }
+  .preview-controls__light { background: #fff; color: #0d0d0d; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+  .preview-controls__dark { background: #0d0d0d; color: #fff; }
+</style>
+</head>
+<body>
+
+  <div class="preview-controls">
+    <button class="preview-controls__light" onclick="setTheme('light')">Light</button>
+    <button class="preview-controls__dark" onclick="setTheme('dark')">Dark</button>
+  </div>
+
+  <div class="braze-modal-overlay" id="brazeModalOverlay">
+    <div class="braze-modal-wrapper">
+
+      <button class="braze-modal__close" id="brazeModalClose" aria-label="Close" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="4" x2="12" y2="12" />
+          <line x1="12" y1="4" x2="4" y2="12" />
+        </svg>
+      </button>
+
+      <div class="braze-modal" role="dialog" aria-modal="true" aria-labelledby="brazeModalTitle">
+
+        <!-- Content: left side -->
+        <div class="braze-modal__content">
+          <h2 class="braze-modal__title" id="brazeModalTitle">Title modal</h2>
+          <p class="braze-modal__text">Main text where we put cool stuff. Main text where we put cool stuff. Main text where we put cool stuff. Main text where we put cool stuff.</p>
+          <ul class="braze-modal__list">
+            <li>This is a &lt;li&gt; with text where we put cool stuff.</li>
+            <li>This is a &lt;li&gt; with text where we put cool stuff.</li>
+            <li>This is a &lt;li&gt; with text where we put cool stuff.</li>
+          </ul>
+          <div class="braze-modal__cta-wrapper">
+            <a class="braze-modal__cta" id="brazeModalCta" href="#" role="button">CTA Label</a>
+          </div>
+        </div>
+
+        <!-- Image: right side -->
+        <div class="braze-modal__image-wrapper">
+          <img
+            class="braze-modal__image"
+            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=480&h=640&fit=crop"
+            alt="Preview image"
+            loading="eager"
+          />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var brazeBridge = {
+      logClick: function (id) { console.log('[Braze Preview] logClick', id || ''); },
+      closeMessage: function () { console.log('[Braze Preview] closeMessage'); }
+    };
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    (function () {
+      function closeModal() {
+        var overlay = document.getElementById('brazeModalOverlay');
+        if (!overlay) return;
+        overlay.classList.add('braze-modal-overlay--closing');
+        overlay.addEventListener('animationend', function () { brazeBridge.closeMessage(); });
+        setTimeout(function () { brazeBridge.closeMessage(); }, 300);
+      }
+
+      var closeBtn = document.getElementById('brazeModalClose');
+      if (closeBtn) closeBtn.addEventListener('click', function (e) { e.preventDefault(); closeModal(); });
+
+      var overlay = document.getElementById('brazeModalOverlay');
+      if (overlay) overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+
+      var ctaBtn = document.getElementById('brazeModalCta');
+      if (ctaBtn) ctaBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log('[Braze Preview] CTA clicked');
+        brazeBridge.logClick();
+        closeModal();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) closeModal();
+      });
+    })();
+  </script>
+</body>
+</html>

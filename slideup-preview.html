@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  /* =======================================================================
+     Pikaso Design Tokens — Inlined for Braze iframe isolation
+     Based on Figma: CRM - Inapps
+       Light: node 88-224  |  Dark: node 85-147
+     Theme-aware: detects light/dark from parent app
+     Variant: slideup (toast notification, bottom-anchored, frosted glass)
+     ======================================================================= */
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* =====================================================================
+     Light theme (default) — Figma node 88-224
+     ===================================================================== */
+  :root {
+    --toast-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --toast-max-width: 340px;
+    --toast-radius: 16px;
+    --toast-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --toast-blur: 28px;
+
+    --toast-bg: rgba(229, 229, 229, 0.50);
+    --toast-border: rgba(13, 13, 13, 0.20);
+
+    --toast-title-color: #0D0D0D;
+    --toast-text-color: #424242;
+    --toast-icon-color: #0D0D0D;
+
+    --toast-close-color: #424242;
+    --toast-close-color-hover: #0D0D0D;
+
+    --toast-action-bg: #0D0D0D;
+    --toast-action-bg-hover: #424242;
+    --toast-action-bg-active: #5b5b5b;
+    --toast-action-color: #FFFFFF;
+  }
+
+  /* =====================================================================
+     Dark theme — Figma node 85-147
+     ===================================================================== */
+  .dark {
+    --toast-bg: rgba(15, 15, 15, 0.50);
+    --toast-border: rgba(255, 255, 255, 0.20);
+
+    --toast-title-color: #F7F7F7;
+    --toast-text-color: #B1B1B1;
+    --toast-icon-color: #F7F7F7;
+
+    --toast-close-color: #B1B1B1;
+    --toast-close-color-hover: #F7F7F7;
+
+    --toast-action-bg: #F7F7F7;
+    --toast-action-bg-hover: #E5E5E5;
+    --toast-action-bg-active: #D8D8D8;
+    --toast-action-color: #0D0D0D;
+  }
+
+  /* =======================================================================
+     Reset & Base
+     ======================================================================= */
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--toast-font);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.2s ease;
+  }
+
+  /* =======================================================================
+     Toast Container — fixed bottom, centered
+     ======================================================================= */
+
+  .braze-toast-anchor {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  /* =======================================================================
+     Toast Card — frosted glass
+     ======================================================================= */
+
+  .braze-toast {
+    position: relative;
+    width: 100%;
+    max-width: var(--toast-max-width);
+    padding: 16px;
+    background: var(--toast-bg);
+    -webkit-backdrop-filter: blur(var(--toast-blur));
+    backdrop-filter: blur(var(--toast-blur));
+    border: 1px solid var(--toast-border);
+    border-radius: var(--toast-radius);
+    box-shadow: var(--toast-shadow);
+    pointer-events: auto;
+
+    opacity: 0;
+    transform: translateY(100%);
+    animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* =======================================================================
+     Header — icon + title row + close button
+     ======================================================================= */
+
+  .braze-toast__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .braze-toast__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: var(--toast-icon-color);
+    margin-top: 1px;
+  }
+
+  .braze-toast__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .braze-toast__title {
+    flex: 1;
+    font-size: 0.875rem;         /* 14px — text-sm */
+    font-weight: 600;            /* semibold */
+    line-height: 1.6;            /* 160% */
+    color: var(--toast-title-color);
+    min-width: 0;
+  }
+
+  /* =======================================================================
+     Close Button
+     ======================================================================= */
+
+  .braze-toast__close {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--toast-close-color);
+    transition: color 0.15s ease;
+    padding: 0;
+    margin: 0;
+  }
+
+  .braze-toast__close:hover {
+    color: var(--toast-close-color-hover);
+  }
+
+  .braze-toast__close svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* =======================================================================
+     Body Text
+     ======================================================================= */
+
+  .braze-toast__text {
+    font-size: 0.75rem;          /* 12px — text-xs */
+    font-weight: 400;            /* regular */
+    line-height: 1.6;            /* 160% */
+    color: var(--toast-text-color);
+    margin-top: 4px;
+    padding-left: 34px;
+  }
+
+  /* =======================================================================
+     Action Button — secondary solid (Perita Plus sm)
+     ======================================================================= */
+
+  .braze-toast__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 12px;
+    font-family: var(--toast-font);
+    font-size: 0.75rem;          /* 12px — text-xs */
+    font-weight: 600;
+    line-height: 1;
+    color: var(--toast-action-color);
+    background: var(--toast-action-bg);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease-in-out;
+    white-space: nowrap;
+    margin-top: 12px;
+    margin-left: 34px;
+  }
+
+  .braze-toast__action:hover {
+    background: var(--toast-action-bg-hover);
+  }
+
+  .braze-toast__action:active {
+    background: var(--toast-action-bg-active);
+  }
+
+  /* =======================================================================
+     Animations
+     ======================================================================= */
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  .braze-toast--closing {
+    animation: slideDown 0.2s ease-in forwards;
+  }
+
+  /* =======================================================================
+     Responsive
+     ======================================================================= */
+
+  @media (max-width: 375px) {
+    .braze-toast-anchor {
+      padding: 12px;
+    }
+
+    .braze-toast {
+      max-width: 100%;
+    }
+  }
+
+  /* =======================================================================
+     Preview-only styles
+     ======================================================================= */
+
+  .preview-controls {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 99999;
+    display: flex;
+    gap: 8px;
+  }
+
+  .preview-controls button {
+    padding: 8px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border: none;
+  }
+
+  .preview-controls button:hover {
+    opacity: 0.85;
+  }
+
+  .preview-controls__light {
+    background: #f7f7f7;
+    color: #0d0d0d;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
+  .preview-controls__dark {
+    background: #1f1f1f;
+    color: #f7f7f7;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .preview-controls__replay {
+    background: #4471E5;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1440&q=80') center/cover no-repeat fixed;
+  }
+
+  body.theme-dark {
+    background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1440&q=80');
+  }
+</style>
+</head>
+<body>
+
+  <!-- Preview-only: theme toggle + replay -->
+  <div class="preview-controls">
+    <button class="preview-controls__light" onclick="setTheme('light')">Light</button>
+    <button class="preview-controls__dark" onclick="setTheme('dark')">Dark</button>
+    <button class="preview-controls__replay" onclick="replayAnimation()">Replay</button>
+  </div>
+
+  <div class="braze-toast-anchor" id="brazeToastAnchor">
+    <div class="braze-toast" id="brazeToast" role="alert" aria-live="assertive">
+
+      <div class="braze-toast__header">
+        <span class="braze-toast__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </span>
+        <h2 class="braze-toast__title" id="brazeToastTitle">Toast Title</h2>
+        <button
+          class="braze-toast__close"
+          id="brazeToastClose"
+          aria-label="Close"
+          type="button"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="4" x2="12" y2="12" />
+            <line x1="12" y1="4" x2="4" y2="12" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="braze-toast__text">El texto que explica un poco mejor el aviso importante, porque con una frase no es suficiente.</p>
+
+      <a
+        class="braze-toast__action"
+        id="brazeToastAction"
+        href="https://pikaso.com/features"
+        role="button"
+      >
+        Action
+      </a>
+
+    </div>
+  </div>
+
+  <script>
+    var brazeBridge = {
+      logClick: function (id) { console.log('[Braze Preview] logClick', id || ''); },
+      closeMessage: function () { console.log('[Braze Preview] closeMessage'); }
+    };
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('theme-dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.body.classList.remove('theme-dark');
+      }
+    }
+
+    function replayAnimation() {
+      var toast = document.getElementById('brazeToast');
+      if (!toast) return;
+      toast.classList.remove('braze-toast--closing');
+      toast.style.animation = 'none';
+      toast.offsetHeight;
+      toast.style.animation = '';
+    }
+
+    (function () {
+      function closeToast() {
+        var toast = document.getElementById('brazeToast');
+        if (!toast) return;
+
+        toast.classList.add('braze-toast--closing');
+
+        toast.addEventListener('animationend', function () {
+          brazeBridge.closeMessage();
+        });
+
+        setTimeout(function () {
+          brazeBridge.closeMessage();
+        }, 300);
+      }
+
+      var closeBtn = document.getElementById('brazeToastClose');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          closeToast();
+        });
+      }
+
+      var actionBtn = document.getElementById('brazeToastAction');
+      if (actionBtn) {
+        actionBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          console.log('[Braze Preview] Action clicked, would navigate to:', actionBtn.getAttribute('href'));
+          brazeBridge.logClick();
+          closeToast();
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          closeToast();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

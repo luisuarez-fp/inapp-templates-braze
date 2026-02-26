@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  /* =======================================================================
+     Pikaso Design Tokens — Inlined for Braze iframe isolation
+     Based on Figma: CRM - Inapps (node 113-1822)
+     Compact launch card with background image + gradient overlay
+     ======================================================================= */
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-Medium.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff2') format('woff2'),
+         url('https://pikaso.cdnpk.net/public/media/Inter-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --modal-overlay: hsla(0, 0%, 0%, 0.5);
+    --modal-radius: 12px;
+    --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    --modal-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --modal-max-width: 256px;
+    --modal-height: 274px;
+    --modal-border: rgba(255, 255, 255, 0.10);
+
+    --modal-title-color: #F7F7F7;
+    --modal-text-color: #C8C8C8;
+    --modal-cta-color: #F7F7F7;
+    --modal-cta-color-hover: #C8C8C8;
+
+    --modal-close-bg: rgba(13, 13, 13, 0.4);
+    --modal-close-bg-hover: rgba(13, 13, 13, 0.6);
+    --modal-close-color: #fff;
+
+    --badge-bg: #336AEA;
+    --badge-color: #fff;
+  }
+
+  /* =======================================================================
+     Reset & Base
+     ======================================================================= */
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--modal-font);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* =======================================================================
+     Overlay
+     ======================================================================= */
+
+  .braze-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    background: transparent;
+    z-index: 9999;
+    padding: 0 56px 56px 0;
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out forwards;
+    pointer-events: none;
+  }
+
+  /* =======================================================================
+     Modal Card
+     ======================================================================= */
+
+  .braze-modal-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: var(--modal-max-width);
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(12px);
+    animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+    pointer-events: auto;
+  }
+
+  .braze-modal {
+    position: relative;
+    width: 100%;
+    height: var(--modal-height);
+    border-radius: var(--modal-radius);
+    box-shadow: var(--modal-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: transparent;
+  }
+
+  .braze-modal::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--modal-radius);
+    box-shadow: inset 0 0 0 1px var(--modal-border);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .braze-modal__media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .braze-modal__media img,
+  .braze-modal__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+  }
+
+  .braze-modal:hover .braze-modal__media img,
+  .braze-modal:hover .braze-modal__media video {
+    transform: scale(1.06);
+  }
+
+  .braze-modal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.00) 0%, rgba(13, 13, 13, 0.80) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* =======================================================================
+     Badge — "NEW" pill, top-left
+     ======================================================================= */
+
+  .braze-modal__badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+    gap: 4px;
+    font-family: var(--modal-font);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--badge-color);
+    background: var(--badge-bg);
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  /* =======================================================================
+     Close Button — inside card, top-right
+     ======================================================================= */
+
+  .braze-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-close-bg);
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .braze-modal__close:hover {
+    background: var(--modal-close-bg-hover);
+  }
+
+  .braze-modal__close svg {
+    width: 14px;
+    height: 14px;
+    color: var(--modal-close-color);
+  }
+
+  /* =======================================================================
+     Content — overlays image at the bottom via z-index
+     ======================================================================= */
+
+  .braze-modal__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 8px;
+    margin-top: auto;
+    padding: 36px 16px 16px 16px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.70) 100%);
+  }
+
+  .braze-modal__content::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+    z-index: -1;
+  }
+
+  .braze-modal__text-group {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  .braze-modal__title {
+    align-self: stretch;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 160%;
+    color: var(--modal-title-color);
+  }
+
+  .braze-modal__text {
+    align-self: stretch;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 160%;
+    color: var(--modal-text-color);
+  }
+
+  /* =======================================================================
+     CTA — text link style with chevron
+     ======================================================================= */
+
+  .braze-modal__cta {
+    display: flex;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--modal-font);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 160%;
+    color: var(--modal-cta-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+    padding: 0;
+  }
+
+  .braze-modal__cta:hover {
+    color: var(--modal-cta-color-hover);
+  }
+
+  .braze-modal__cta svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .braze-modal__cta:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* =======================================================================
+     Animations
+     ======================================================================= */
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(12px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes scaleOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(12px);
+    }
+  }
+
+  .braze-modal-overlay--closing {
+    animation: fadeOut 0.15s ease-in forwards;
+  }
+
+  .braze-modal-overlay--closing .braze-modal-wrapper {
+    animation: scaleOut 0.15s ease-in forwards;
+  }
+</style>
+</head>
+<body>
+  <!--
+    Braze Custom HTML In-App Message Template: Launch Modal
+    =========================================================
+    Design source: Figma CRM - Inapps (node 113-1822)
+    Compact card (256×274) with background image + dark gradient overlay.
+    Always dark theme — text is always white over image.
+
+    To use this template:
+      1. Replace TITLE_KEY, TEXT_KEY, CTA_KEY with your Lokalise keys
+      2. Replace BADGE_KEY with your Lokalise key (or hardcode "NEW")
+      3. Set media: replace <img src> or swap to <video src autoplay muted loop playsinline>
+      4. Set CTA href
+  -->
+
+  <!-- =====================================================================
+       Lokalise translations: user language + English fallback (2 requests max).
+       Cached for 1h (cache_max_age 3600). Aborts if EN fallback fails.
+       Language detected via Braze ${language} attribute (set by setLanguage() in app).
+       ===================================================================== -->
+  {%- assign lang = ${language} | default: 'en' -%}
+  {%- case lang -%}
+    {%- when 'es' -%}{%- assign lok_lang = 'es_ES' -%}
+    {%- when 'pt' -%}{%- assign lok_lang = 'pt_BR' -%}
+    {%- when 'de' -%}{%- assign lok_lang = 'de_DE' -%}
+    {%- when 'fr' -%}{%- assign lok_lang = 'fr_FR' -%}
+    {%- when 'it' -%}{%- assign lok_lang = 'it_IT' -%}
+    {%- when 'ru' -%}{%- assign lok_lang = 'ru_RU' -%}
+    {%- when 'ja' -%}{%- assign lok_lang = 'ja_JP' -%}
+    {%- when 'ko' -%}{%- assign lok_lang = 'ko_KR' -%}
+    {%- when 'nl' -%}{%- assign lok_lang = 'nl_NL' -%}
+    {%- when 'pl' -%}{%- assign lok_lang = 'pl_PL' -%}
+    {%- when 'zh' -%}{%- assign lok_lang = 'zh_HK' -%}
+    {%- when 'hi' -%}{%- assign lok_lang = 'hi_IN' -%}
+    {%- when 'cs' -%}{%- assign lok_lang = 'cs_CZ' -%}
+    {%- when 'da' -%}{%- assign lok_lang = 'da_DK' -%}
+    {%- when 'fi' -%}{%- assign lok_lang = 'fi_FI' -%}
+    {%- when 'nb' -%}{%- assign lok_lang = 'nb_NO' -%}
+    {%- when 'sv' -%}{%- assign lok_lang = 'sv_SE' -%}
+    {%- when 'tr' -%}{%- assign lok_lang = 'tr_TR' -%}
+    {%- when 'id' -%}{%- assign lok_lang = 'id_ID' -%}
+    {%- when 'vi' -%}{%- assign lok_lang = 'vi_VN' -%}
+    {%- when 'th' -%}{%- assign lok_lang = 'th_TH' -%}
+    {%- else -%}{%- assign lok_lang = 'en' -%}
+  {%- endcase -%}
+  {%- assign base = 'https://exports.live.lokalise.cloud/braze/64903509694141adaff9b6.83125809/a4597de8e0ea203a9d9cc0266d7f1fed9fa4a0c1/' -%}
+  {%- connected_content {{ base }}en.json :save t_en :cache_max_age 3600 -%}
+  {%- if t_en == null -%}{%- abort_message("Lokalise EN fallback failed") -%}{%- endif -%}
+  {%- if lok_lang != 'en' -%}
+    {%- assign json_url = base | append: lok_lang | append: '.json' -%}
+    {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
+  {%- else -%}
+    {%- assign t = t_en -%}
+  {%- endif -%}
+
+  <div class="braze-modal-overlay" id="brazeModalOverlay">
+    <div class="braze-modal-wrapper">
+      <div
+        class="braze-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="brazeModalTitle"
+      >
+        <!-- Media: use <img> for images or <video autoplay muted loop playsinline> for video -->
+        <div class="braze-modal__media">
+          <img src="https://cdn.braze.eu/appboy/communication/assets/image_assets/images/69945953c1627f4106e11467/original.png?1771329875" alt="" />
+          <!-- <video src="VIDEO_URL" autoplay muted loop playsinline></video> -->
+        </div>
+
+        <span class="braze-modal__badge">NEW</span>
+
+        <button
+          class="braze-modal__close"
+          id="brazeModalClose"
+          aria-label="Close"
+          type="button"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="4" x2="12" y2="12" />
+            <line x1="12" y1="4" x2="4" y2="12" />
+          </svg>
+        </button>
+
+        <div class="braze-modal__content">
+          <div class="braze-modal__text-group">
+            <h2 class="braze-modal__title" id="brazeModalTitle">{{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Title_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Title_v1 }}</h2>
+            <p class="braze-modal__text">{{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Text_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Text_v1 }}</p>
+          </div>
+          <a
+            class="braze-modal__cta"
+            id="brazeModalCta"
+            href="/pikaso/feature"
+            role="button"
+          >
+            {{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_CTA_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_CTA_v1 }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 3 11 8 6 13" />
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      try {
+        var parentDoc = window.parent.document;
+        var parentBody = parentDoc.body;
+        var parentHtml = parentDoc.documentElement;
+
+        parentBody.style.removeProperty('overflow');
+        parentHtml.style.removeProperty('overflow');
+        parentBody.classList.remove('ab-pause-scrolling');
+        parentHtml.classList.remove('ab-pause-scrolling');
+
+        var iamRoot = parentDoc.querySelector('.ab-iam-root');
+        if (iamRoot) {
+          iamRoot.style.pointerEvents = 'none';
+          iamRoot.style.background = 'transparent';
+
+          var iframe = iamRoot.querySelector('iframe');
+          if (iframe) {
+            iframe.style.position = 'fixed';
+            iframe.style.bottom = '56px';
+            iframe.style.right = '56px';
+            iframe.style.top = 'auto';
+            iframe.style.left = 'auto';
+            iframe.style.width = '256px';
+            iframe.style.height = '274px';
+            iframe.style.borderRadius = '12px';
+            iframe.style.pointerEvents = 'auto';
+          }
+
+          var brazeClose = iamRoot.querySelector('.ab-close-button');
+          if (brazeClose) brazeClose.style.display = 'none';
+        }
+
+        var overlay = document.querySelector('.braze-modal-overlay');
+        if (overlay) overlay.style.padding = '0';
+      } catch (e) {}
+
+      function closeModal() {
+        var overlay = document.getElementById('brazeModalOverlay');
+        if (!overlay) return;
+
+        overlay.classList.add('braze-modal-overlay--closing');
+
+        overlay.addEventListener('animationend', function () {
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.closeMessage();
+          }
+        });
+
+        setTimeout(function () {
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.closeMessage();
+          }
+        }, 300);
+      }
+
+      var closeBtn = document.getElementById('brazeModalClose');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          closeModal();
+        });
+      }
+
+      var ctaBtn = document.getElementById('brazeModalCta');
+      if (ctaBtn) {
+        ctaBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var url = ctaBtn.getAttribute('href');
+
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.logClick();
+          }
+
+          if (url && url.trim() !== '') {
+            window.parent.location.href = url;
+          }
+
+          closeModal();
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
