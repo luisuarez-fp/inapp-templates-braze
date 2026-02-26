@@ -383,51 +383,12 @@
     Design source: Figma CRM - Inapps
     Layout: horizontal — content left 50%, image right 50%
     Theme: auto-detects light/dark from parent app
-    Translations: Lokalise via connected_content (2 requests: user lang + en fallback)
+    Translations: replace placeholder keys with your i18n values
 
     To use this template:
-      1. Replace translation keys (TITLE_KEY, TEXT_KEY, CTA_KEY) with your Lokalise keys
+      1. Replace translation keys (TITLE_KEY, TEXT_KEY, CTA_KEY) with your translation keys
       2. Set image src and CTA href
   -->
-
-  <!-- =====================================================================
-       Lokalise translations: only user language + English fallback (2 requests).
-       Language detected via Braze ${language} attribute (set by setLanguage() in app).
-       ===================================================================== -->
-  {%- assign lang = ${language} | default: 'en' -%}
-  {%- case lang -%}
-    {%- when 'es' -%}{%- assign lok_lang = 'es_ES' -%}
-    {%- when 'pt' -%}{%- assign lok_lang = 'pt_BR' -%}
-    {%- when 'de' -%}{%- assign lok_lang = 'de_DE' -%}
-    {%- when 'fr' -%}{%- assign lok_lang = 'fr_FR' -%}
-    {%- when 'it' -%}{%- assign lok_lang = 'it_IT' -%}
-    {%- when 'ru' -%}{%- assign lok_lang = 'ru_RU' -%}
-    {%- when 'ja' -%}{%- assign lok_lang = 'ja_JP' -%}
-    {%- when 'ko' -%}{%- assign lok_lang = 'ko_KR' -%}
-    {%- when 'nl' -%}{%- assign lok_lang = 'nl_NL' -%}
-    {%- when 'pl' -%}{%- assign lok_lang = 'pl_PL' -%}
-    {%- when 'zh' -%}{%- assign lok_lang = 'zh_HK' -%}
-    {%- when 'hi' -%}{%- assign lok_lang = 'hi_IN' -%}
-    {%- when 'cs' -%}{%- assign lok_lang = 'cs_CZ' -%}
-    {%- when 'da' -%}{%- assign lok_lang = 'da_DK' -%}
-    {%- when 'fi' -%}{%- assign lok_lang = 'fi_FI' -%}
-    {%- when 'nb' -%}{%- assign lok_lang = 'nb_NO' -%}
-    {%- when 'sv' -%}{%- assign lok_lang = 'sv_SE' -%}
-    {%- when 'tr' -%}{%- assign lok_lang = 'tr_TR' -%}
-    {%- when 'id' -%}{%- assign lok_lang = 'id_ID' -%}
-    {%- when 'vi' -%}{%- assign lok_lang = 'vi_VN' -%}
-    {%- when 'th' -%}{%- assign lok_lang = 'th_TH' -%}
-    {%- else -%}{%- assign lok_lang = 'en' -%}
-  {%- endcase -%}
-  {%- assign base = 'https://exports.live.lokalise.cloud/braze/64903509694141adaff9b6.83125809/a4597de8e0ea203a9d9cc0266d7f1fed9fa4a0c1/' -%}
-  {%- connected_content {{ base }}en.json :save t_en :cache_max_age 3600 -%}
-  {%- if t_en == null -%}{%- abort_message("Lokalise EN fallback failed") -%}{%- endif -%}
-  {%- if lok_lang != 'en' -%}
-    {%- assign json_url = base | append: lok_lang | append: '.json' -%}
-    {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
-  {%- else -%}
-    {%- assign t = t_en -%}
-  {%- endif -%}
 
   <div class="braze-modal-overlay" id="brazeModalOverlay">
     <div class="braze-modal-wrapper">
@@ -449,8 +410,8 @@
 
         <!-- Content: left side -->
         <div class="braze-modal__content">
-          <h2 class="braze-modal__title" id="brazeModalTitle">{{ t.TITLE_KEY | default: t_en.TITLE_KEY }}</h2>
-          <p class="braze-modal__text">{{ t.TEXT_KEY | default: t_en.TEXT_KEY }}</p>
+          <h2 class="braze-modal__title" id="brazeModalTitle">TITLE_KEY</h2>
+          <p class="braze-modal__text">TEXT_KEY</p>
           <div class="braze-modal__cta-wrapper">
             <a
               class="braze-modal__cta"
@@ -458,7 +419,7 @@
               href="${cta_url}"
               role="button"
             >
-              {{ t.CTA_KEY | default: t_en.CTA_KEY }}
+              CTA_KEY
             </a>
           </div>
         </div>

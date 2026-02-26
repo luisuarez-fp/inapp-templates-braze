@@ -364,51 +364,11 @@
     Always dark theme — text is always white over image.
 
     To use this template:
-      1. Replace TITLE_KEY, TEXT_KEY, CTA_KEY with your Lokalise keys
-      2. Replace BADGE_KEY with your Lokalise key (or hardcode "NEW")
+      1. Replace TITLE_KEY, TEXT_KEY, CTA_KEY with your translation keys
+      2. Replace BADGE_KEY with your translation key (or hardcode "NEW")
       3. Set media: replace <img src> or swap to <video src autoplay muted loop playsinline>
       4. Set CTA href
   -->
-
-  <!-- =====================================================================
-       Lokalise translations: user language + English fallback (2 requests max).
-       Cached for 1h (cache_max_age 3600). Aborts if EN fallback fails.
-       Language detected via Braze ${language} attribute (set by setLanguage() in app).
-       ===================================================================== -->
-  {%- assign lang = ${language} | default: 'en' -%}
-  {%- case lang -%}
-    {%- when 'es' -%}{%- assign lok_lang = 'es_ES' -%}
-    {%- when 'pt' -%}{%- assign lok_lang = 'pt_BR' -%}
-    {%- when 'de' -%}{%- assign lok_lang = 'de_DE' -%}
-    {%- when 'fr' -%}{%- assign lok_lang = 'fr_FR' -%}
-    {%- when 'it' -%}{%- assign lok_lang = 'it_IT' -%}
-    {%- when 'ru' -%}{%- assign lok_lang = 'ru_RU' -%}
-    {%- when 'ja' -%}{%- assign lok_lang = 'ja_JP' -%}
-    {%- when 'ko' -%}{%- assign lok_lang = 'ko_KR' -%}
-    {%- when 'nl' -%}{%- assign lok_lang = 'nl_NL' -%}
-    {%- when 'pl' -%}{%- assign lok_lang = 'pl_PL' -%}
-    {%- when 'zh' -%}{%- assign lok_lang = 'zh_HK' -%}
-    {%- when 'hi' -%}{%- assign lok_lang = 'hi_IN' -%}
-    {%- when 'cs' -%}{%- assign lok_lang = 'cs_CZ' -%}
-    {%- when 'da' -%}{%- assign lok_lang = 'da_DK' -%}
-    {%- when 'fi' -%}{%- assign lok_lang = 'fi_FI' -%}
-    {%- when 'nb' -%}{%- assign lok_lang = 'nb_NO' -%}
-    {%- when 'sv' -%}{%- assign lok_lang = 'sv_SE' -%}
-    {%- when 'tr' -%}{%- assign lok_lang = 'tr_TR' -%}
-    {%- when 'id' -%}{%- assign lok_lang = 'id_ID' -%}
-    {%- when 'vi' -%}{%- assign lok_lang = 'vi_VN' -%}
-    {%- when 'th' -%}{%- assign lok_lang = 'th_TH' -%}
-    {%- else -%}{%- assign lok_lang = 'en' -%}
-  {%- endcase -%}
-  {%- assign base = 'https://exports.live.lokalise.cloud/braze/64903509694141adaff9b6.83125809/a4597de8e0ea203a9d9cc0266d7f1fed9fa4a0c1/' -%}
-  {%- connected_content {{ base }}en.json :save t_en :cache_max_age 3600 -%}
-  {%- if t_en == null -%}{%- abort_message("Lokalise EN fallback failed") -%}{%- endif -%}
-  {%- if lok_lang != 'en' -%}
-    {%- assign json_url = base | append: lok_lang | append: '.json' -%}
-    {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
-  {%- else -%}
-    {%- assign t = t_en -%}
-  {%- endif -%}
 
   <div class="braze-modal-overlay" id="brazeModalOverlay">
     <div class="braze-modal-wrapper">
@@ -440,8 +400,8 @@
 
         <div class="braze-modal__content">
           <div class="braze-modal__text-group">
-            <h2 class="braze-modal__title" id="brazeModalTitle">{{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Title_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Title_v1 }}</h2>
-            <p class="braze-modal__text">{{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Text_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_Text_v1 }}</p>
+            <h2 class="braze-modal__title" id="brazeModalTitle">TITLE_KEY</h2>
+            <p class="braze-modal__text">TEXT_KEY</p>
           </div>
           <a
             class="braze-modal__cta"
@@ -449,7 +409,7 @@
             href="/pikaso/feature"
             role="button"
           >
-            {{ t.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_CTA_v1 | default: t_en.2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Main_CTA_v1 }}
+            CTA_KEY
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 3 11 8 6 13" />
             </svg>

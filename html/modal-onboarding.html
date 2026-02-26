@@ -406,45 +406,6 @@
       3. Update image URLs for each step
   -->
 
-  <!-- =====================================================================
-       Lokalise translations: only user language + English fallback (2 requests).
-       Language detected via Braze ${language} attribute (set by setLanguage() in app).
-       ===================================================================== -->
-  {%- assign lang = ${language} | default: 'en' -%}
-  {%- case lang -%}
-    {%- when 'es' -%}{%- assign lok_lang = 'es_ES' -%}
-    {%- when 'pt' -%}{%- assign lok_lang = 'pt_BR' -%}
-    {%- when 'de' -%}{%- assign lok_lang = 'de_DE' -%}
-    {%- when 'fr' -%}{%- assign lok_lang = 'fr_FR' -%}
-    {%- when 'it' -%}{%- assign lok_lang = 'it_IT' -%}
-    {%- when 'ru' -%}{%- assign lok_lang = 'ru_RU' -%}
-    {%- when 'ja' -%}{%- assign lok_lang = 'ja_JP' -%}
-    {%- when 'ko' -%}{%- assign lok_lang = 'ko_KR' -%}
-    {%- when 'nl' -%}{%- assign lok_lang = 'nl_NL' -%}
-    {%- when 'pl' -%}{%- assign lok_lang = 'pl_PL' -%}
-    {%- when 'zh' -%}{%- assign lok_lang = 'zh_HK' -%}
-    {%- when 'hi' -%}{%- assign lok_lang = 'hi_IN' -%}
-    {%- when 'cs' -%}{%- assign lok_lang = 'cs_CZ' -%}
-    {%- when 'da' -%}{%- assign lok_lang = 'da_DK' -%}
-    {%- when 'fi' -%}{%- assign lok_lang = 'fi_FI' -%}
-    {%- when 'nb' -%}{%- assign lok_lang = 'nb_NO' -%}
-    {%- when 'sv' -%}{%- assign lok_lang = 'sv_SE' -%}
-    {%- when 'tr' -%}{%- assign lok_lang = 'tr_TR' -%}
-    {%- when 'id' -%}{%- assign lok_lang = 'id_ID' -%}
-    {%- when 'vi' -%}{%- assign lok_lang = 'vi_VN' -%}
-    {%- when 'th' -%}{%- assign lok_lang = 'th_TH' -%}
-    {%- else -%}{%- assign lok_lang = 'en' -%}
-  {%- endcase -%}
-  {%- assign base = 'https://exports.live.lokalise.cloud/braze/64903509694141adaff9b6.83125809/a4597de8e0ea203a9d9cc0266d7f1fed9fa4a0c1/' -%}
-  {%- connected_content {{ base }}en.json :save t_en :cache_max_age 3600 -%}
-  {%- if t_en == null -%}{%- abort_message("Lokalise EN fallback failed") -%}{%- endif -%}
-  {%- if lok_lang != 'en' -%}
-    {%- assign json_url = base | append: lok_lang | append: '.json' -%}
-    {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
-  {%- else -%}
-    {%- assign t = t_en -%}
-  {%- endif -%}
-
   <div class="braze-modal-overlay" id="brazeModalOverlay">
     <div class="braze-modal-wrapper">
 
@@ -490,44 +451,44 @@
       var STEPS = [
         {
           image: '${step1_image}',
-          title: '{{ t.STEP1_TITLE_KEY | default: t_en.STEP1_TITLE_KEY }}',
-          text:  '{{ t.STEP1_TEXT_KEY | default: t_en.STEP1_TEXT_KEY }}',
-          cta:   '{{ t.STEP1_CTA_KEY | default: t_en.STEP1_CTA_KEY }}',
+          title: 'STEP1_TITLE_KEY',
+          text:  'STEP1_TEXT_KEY',
+          cta:   'STEP1_CTA_KEY',
           url:   ''
         },
         {
           image: '${step2_image}',
-          title: '{{ t.STEP2_TITLE_KEY | default: t_en.STEP2_TITLE_KEY }}',
-          text:  '{{ t.STEP2_TEXT_KEY | default: t_en.STEP2_TEXT_KEY }}',
-          cta:   '{{ t.STEP2_CTA_KEY | default: t_en.STEP2_CTA_KEY }}',
+          title: 'STEP2_TITLE_KEY',
+          text:  'STEP2_TEXT_KEY',
+          cta:   'STEP2_CTA_KEY',
           url:   ''
         },
         {
           image: '${step3_image}',
-          title: '{{ t.STEP3_TITLE_KEY | default: t_en.STEP3_TITLE_KEY }}',
-          text:  '{{ t.STEP3_TEXT_KEY | default: t_en.STEP3_TEXT_KEY }}',
-          cta:   '{{ t.STEP3_CTA_KEY | default: t_en.STEP3_CTA_KEY }}',
+          title: 'STEP3_TITLE_KEY',
+          text:  'STEP3_TEXT_KEY',
+          cta:   'STEP3_CTA_KEY',
           url:   ''
         },
         {
           image: '${step4_image}',
-          title: '{{ t.STEP4_TITLE_KEY | default: t_en.STEP4_TITLE_KEY }}',
-          text:  '{{ t.STEP4_TEXT_KEY | default: t_en.STEP4_TEXT_KEY }}',
-          cta:   '{{ t.STEP4_CTA_KEY | default: t_en.STEP4_CTA_KEY }}',
+          title: 'STEP4_TITLE_KEY',
+          text:  'STEP4_TEXT_KEY',
+          cta:   'STEP4_CTA_KEY',
           url:   ''
         },
         {
           image: '${step5_image}',
-          title: '{{ t.STEP5_TITLE_KEY | default: t_en.STEP5_TITLE_KEY }}',
-          text:  '{{ t.STEP5_TEXT_KEY | default: t_en.STEP5_TEXT_KEY }}',
-          cta:   '{{ t.STEP5_CTA_KEY | default: t_en.STEP5_CTA_KEY }}',
+          title: 'STEP5_TITLE_KEY',
+          text:  'STEP5_TEXT_KEY',
+          cta:   'STEP5_CTA_KEY',
           url:   ''
         },
         {
           image: '${step6_image}',
-          title: '{{ t.STEP6_TITLE_KEY | default: t_en.STEP6_TITLE_KEY }}',
-          text:  '{{ t.STEP6_TEXT_KEY | default: t_en.STEP6_TEXT_KEY }}',
-          cta:   '{{ t.STEP6_CTA_KEY | default: t_en.STEP6_CTA_KEY }}',
+          title: 'STEP6_TITLE_KEY',
+          text:  'STEP6_TEXT_KEY',
+          cta:   'STEP6_CTA_KEY',
           url:   '${final_cta_url}'
         }
       ];
