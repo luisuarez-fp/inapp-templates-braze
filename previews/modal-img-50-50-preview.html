@@ -126,7 +126,8 @@
     flex-shrink: 0;
   }
 
-  .braze-modal__image {
+  .braze-modal__image,
+  .braze-modal__image-wrapper video {
     width: 100%;
     height: 100%;
     display: block;
@@ -301,7 +302,7 @@
           </div>
         </div>
 
-        <!-- Image: right side -->
+        <!-- Media: right side — use <img> or <video> -->
         <div class="braze-modal__image-wrapper">
           <img
             class="braze-modal__image"
@@ -309,6 +310,7 @@
             alt="Preview image"
             loading="eager"
           />
+          <!-- <video src="VIDEO_URL" autoplay muted loop playsinline></video> -->
         </div>
 
       </div>

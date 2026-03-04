@@ -281,7 +281,8 @@
     background: hsl(0, 0%, 8%);
   }
 
-  .braze-modal__carousel-main img {
+  .braze-modal__carousel-main img,
+  .braze-modal__carousel-main video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -291,7 +292,8 @@
     transition: opacity 0.3s ease;
   }
 
-  .braze-modal__carousel-main img.active {
+  .braze-modal__carousel-main img.active,
+  .braze-modal__carousel-main video.active {
     opacity: 1;
   }
 
@@ -507,42 +509,48 @@
          ================================================================= */
       var STEPS = [
         {
-          image: '${step1_image}',
+          media: '${step1_image}',
+          mediaType: 'image',
           title: '{{ t.STEP1_TITLE_KEY | default: t_en.STEP1_TITLE_KEY }}',
           text:  '{{ t.STEP1_TEXT_KEY | default: t_en.STEP1_TEXT_KEY }}',
           cta:   '{{ t.STEP1_CTA_KEY | default: t_en.STEP1_CTA_KEY }}',
           url:   ''
         },
         {
-          image: '${step2_image}',
+          media: '${step2_image}',
+          mediaType: 'image',
           title: '{{ t.STEP2_TITLE_KEY | default: t_en.STEP2_TITLE_KEY }}',
           text:  '{{ t.STEP2_TEXT_KEY | default: t_en.STEP2_TEXT_KEY }}',
           cta:   '{{ t.STEP2_CTA_KEY | default: t_en.STEP2_CTA_KEY }}',
           url:   ''
         },
         {
-          image: '${step3_image}',
+          media: '${step3_image}',
+          mediaType: 'image',
           title: '{{ t.STEP3_TITLE_KEY | default: t_en.STEP3_TITLE_KEY }}',
           text:  '{{ t.STEP3_TEXT_KEY | default: t_en.STEP3_TEXT_KEY }}',
           cta:   '{{ t.STEP3_CTA_KEY | default: t_en.STEP3_CTA_KEY }}',
           url:   ''
         },
         {
-          image: '${step4_image}',
+          media: '${step4_image}',
+          mediaType: 'image',
           title: '{{ t.STEP4_TITLE_KEY | default: t_en.STEP4_TITLE_KEY }}',
           text:  '{{ t.STEP4_TEXT_KEY | default: t_en.STEP4_TEXT_KEY }}',
           cta:   '{{ t.STEP4_CTA_KEY | default: t_en.STEP4_CTA_KEY }}',
           url:   ''
         },
         {
-          image: '${step5_image}',
+          media: '${step5_image}',
+          mediaType: 'image',
           title: '{{ t.STEP5_TITLE_KEY | default: t_en.STEP5_TITLE_KEY }}',
           text:  '{{ t.STEP5_TEXT_KEY | default: t_en.STEP5_TEXT_KEY }}',
           cta:   '{{ t.STEP5_CTA_KEY | default: t_en.STEP5_CTA_KEY }}',
           url:   ''
         },
         {
-          image: '${step6_image}',
+          media: '${step6_image}',
+          mediaType: 'image',
           title: '{{ t.STEP6_TITLE_KEY | default: t_en.STEP6_TITLE_KEY }}',
           text:  '{{ t.STEP6_TEXT_KEY | default: t_en.STEP6_TEXT_KEY }}',
           cta:   '{{ t.STEP6_CTA_KEY | default: t_en.STEP6_CTA_KEY }}',
@@ -569,19 +577,30 @@
       var thumbContainer = document.getElementById('brazeCarouselThumbs');
 
       STEPS.forEach(function (step, i) {
-        var img = document.createElement('img');
-        img.src = step.image;
-        img.alt = 'Step ' + (i + 1);
-        img.loading = i === 0 ? 'eager' : 'lazy';
-        if (i === 0) img.classList.add('active');
-        mainContainer.appendChild(img);
+        var mainEl;
+        if (step.mediaType === 'video') {
+          mainEl = document.createElement('video');
+          mainEl.src = step.media;
+          mainEl.autoplay = true;
+          mainEl.muted = true;
+          mainEl.loop = true;
+          mainEl.playsInline = true;
+          mainEl.setAttribute('playsinline', '');
+        } else {
+          mainEl = document.createElement('img');
+          mainEl.src = step.media;
+          mainEl.alt = 'Step ' + (i + 1);
+          mainEl.loading = i === 0 ? 'eager' : 'lazy';
+        }
+        if (i === 0) mainEl.classList.add('active');
+        mainContainer.appendChild(mainEl);
 
         var thumb = document.createElement('button');
         thumb.className = 'braze-modal__thumb' + (i === 0 ? ' active' : '');
         thumb.setAttribute('aria-label', 'Go to step ' + (i + 1));
         thumb.setAttribute('type', 'button');
         var thumbImg = document.createElement('img');
-        thumbImg.src = step.image;
+        thumbImg.src = step.mediaType === 'video' ? '' : step.media;
         thumbImg.alt = '';
         thumb.appendChild(thumbImg);
         thumb.addEventListener('click', function () { goToStep(i); });
@@ -595,9 +614,13 @@
         if (index < 0 || index >= STEPS.length) return;
         currentStep = index;
 
-        var mainImages = mainContainer.querySelectorAll('img');
-        for (var i = 0; i < mainImages.length; i++) {
-          mainImages[i].classList.toggle('active', i === index);
+        var mainMedia = mainContainer.querySelectorAll('img, video');
+        for (var i = 0; i < mainMedia.length; i++) {
+          mainMedia[i].classList.toggle('active', i === index);
+          if (mainMedia[i].tagName === 'VIDEO') {
+            if (i === index) mainMedia[i].play();
+            else mainMedia[i].pause();
+          }
         }
 
         var thumbs = thumbContainer.querySelectorAll('.braze-modal__thumb');

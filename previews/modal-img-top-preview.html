@@ -151,7 +151,7 @@
   }
 
   /* =======================================================================
-     Hero Image
+     Hero Media (image or video)
      ======================================================================= */
 
   .braze-modal__image-wrapper {
@@ -161,7 +161,8 @@
     flex-shrink: 0;
   }
 
-  .braze-modal__image {
+  .braze-modal__image,
+  .braze-modal__image-wrapper video {
     width: 100%;
     height: auto;
     display: block;
@@ -420,7 +421,7 @@
 
       <div class="braze-modal" role="dialog" aria-modal="true" aria-labelledby="brazeModalTitle">
 
-        <!-- Hero Image -->
+        <!-- Hero Media: use <img> or <video> -->
         <div class="braze-modal__image-wrapper">
           <img
             class="braze-modal__image"
@@ -428,6 +429,7 @@
             alt="Preview image"
             loading="eager"
           />
+          <!-- <video src="VIDEO_URL" autoplay muted loop playsinline></video> -->
         </div>
 
         <!-- Content: Title + Text + CTA -->

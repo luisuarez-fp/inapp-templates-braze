@@ -131,11 +131,13 @@
     position: relative; aspect-ratio: 1 / 1; border-radius: 16px; overflow: hidden; background: hsl(0, 0%, 8%);
   }
 
-  .braze-modal__carousel-main img {
+  .braze-modal__carousel-main img,
+  .braze-modal__carousel-main video {
     width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;
     opacity: 0; transition: opacity 0.3s ease;
   }
-  .braze-modal__carousel-main img.active { opacity: 1; }
+  .braze-modal__carousel-main img.active,
+  .braze-modal__carousel-main video.active { opacity: 1; }
 
   .braze-modal__carousel-thumbs { display: flex; gap: 8px; flex-shrink: 0; }
 
@@ -237,37 +239,43 @@
     (function () {
       var STEPS = [
         {
-          image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=600&fit=crop',
+          media: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=600&fit=crop',
+          mediaType: 'image',
           title: 'Welcome to Pikaso Spaces',
           text: 'Organize all your AI creations in one place. Create, save, and share your work effortlessly with Spaces.',
           cta: 'Next'
         },
         {
-          image: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=800&h=600&fit=crop',
+          media: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=800&h=600&fit=crop',
+          mediaType: 'image',
           title: 'Create Collections',
           text: 'Group related images into collections. Keep your projects tidy and find what you need instantly.',
           cta: 'Next'
         },
         {
-          image: 'https://images.unsplash.com/photo-1633412802994-5c058f151b66?w=800&h=600&fit=crop',
+          media: 'https://images.unsplash.com/photo-1633412802994-5c058f151b66?w=800&h=600&fit=crop',
+          mediaType: 'image',
           title: 'Collaborate with Teams',
           text: 'Invite team members to your Spaces. Share feedback, iterate together, and ship faster.',
           cta: 'Next'
         },
         {
-          image: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&h=600&fit=crop',
+          media: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&h=600&fit=crop',
+          mediaType: 'image',
           title: 'AI-Powered Editing',
           text: 'Use our suite of AI tools to enhance, upscale, and transform your images directly in Spaces.',
           cta: 'Next'
         },
         {
-          image: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=600&fit=crop',
+          media: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=600&fit=crop',
+          mediaType: 'image',
           title: 'Export & Download',
           text: 'Download in multiple formats and resolutions. Perfect for web, print, or social media.',
           cta: 'Next'
         },
         {
-          image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=600&fit=crop',
+          media: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=600&fit=crop',
+          mediaType: 'image',
           title: 'You\'re All Set!',
           text: 'Start exploring Spaces now. Your creative workspace is ready and waiting for you.',
           cta: 'Get Started',
@@ -280,19 +288,30 @@
       var thumbContainer = document.getElementById('brazeCarouselThumbs');
 
       STEPS.forEach(function (step, i) {
-        var img = document.createElement('img');
-        img.src = step.image;
-        img.alt = 'Step ' + (i + 1);
-        img.loading = i === 0 ? 'eager' : 'lazy';
-        if (i === 0) img.classList.add('active');
-        mainContainer.appendChild(img);
+        var mainEl;
+        if (step.mediaType === 'video') {
+          mainEl = document.createElement('video');
+          mainEl.src = step.media;
+          mainEl.autoplay = true;
+          mainEl.muted = true;
+          mainEl.loop = true;
+          mainEl.playsInline = true;
+          mainEl.setAttribute('playsinline', '');
+        } else {
+          mainEl = document.createElement('img');
+          mainEl.src = step.media;
+          mainEl.alt = 'Step ' + (i + 1);
+          mainEl.loading = i === 0 ? 'eager' : 'lazy';
+        }
+        if (i === 0) mainEl.classList.add('active');
+        mainContainer.appendChild(mainEl);
 
         var thumb = document.createElement('button');
         thumb.className = 'braze-modal__thumb' + (i === 0 ? ' active' : '');
         thumb.setAttribute('aria-label', 'Go to step ' + (i + 1));
         thumb.setAttribute('type', 'button');
         var thumbImg = document.createElement('img');
-        thumbImg.src = step.image;
+        thumbImg.src = step.mediaType === 'video' ? '' : step.media;
         thumbImg.alt = '';
         thumb.appendChild(thumbImg);
         thumb.addEventListener('click', function () { goToStep(i); });
@@ -303,8 +322,14 @@
         if (index < 0 || index >= STEPS.length) return;
         currentStep = index;
 
-        var mainImages = mainContainer.querySelectorAll('img');
-        for (var i = 0; i < mainImages.length; i++) mainImages[i].classList.toggle('active', i === index);
+        var mainMedia = mainContainer.querySelectorAll('img, video');
+        for (var i = 0; i < mainMedia.length; i++) {
+          mainMedia[i].classList.toggle('active', i === index);
+          if (mainMedia[i].tagName === 'VIDEO') {
+            if (i === index) mainMedia[i].play();
+            else mainMedia[i].pause();
+          }
+        }
 
         var thumbs = thumbContainer.querySelectorAll('.braze-modal__thumb');
         for (var j = 0; j < thumbs.length; j++) thumbs[j].classList.toggle('active', j === index);
