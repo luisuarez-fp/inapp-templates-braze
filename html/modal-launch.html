@@ -89,10 +89,17 @@
     justify-content: flex-end;
     background: transparent;
     z-index: 9999;
-    padding: 0 56px 56px 0;
+    padding: 0 24px 24px 0;
     opacity: 0;
     animation: fadeIn 0.2s ease-out forwards;
     pointer-events: none;
+  }
+
+  @media (max-width: 480px) {
+    .braze-modal-overlay {
+      justify-content: center;
+      padding: 0 24px 24px 24px;
+    }
   }
 
   /* =======================================================================
@@ -182,7 +189,7 @@
 
   .braze-modal__badge {
     position: absolute;
-    top: 12px;
+    top: 15px;
     left: 12px;
     z-index: 2;
     display: inline-flex;
@@ -197,7 +204,7 @@
     letter-spacing: 0.02em;
     color: var(--badge-color);
     background: var(--badge-bg);
-    border-radius: 2px;
+    border-radius: 4px;
     text-transform: uppercase;
   }
 
@@ -505,8 +512,8 @@
           var iframe = iamRoot.querySelector('iframe');
           if (iframe) {
             iframe.style.position = 'fixed';
-            iframe.style.bottom = '56px';
-            iframe.style.right = '56px';
+            iframe.style.bottom = '24px';
+            iframe.style.right = '24px';
             iframe.style.top = 'auto';
             iframe.style.left = 'auto';
             iframe.style.width = '256px';
