@@ -148,9 +148,23 @@
     will-change: transform;
   }
 
-  .braze-modal:hover .braze-modal__media img,
-  .braze-modal:hover .braze-modal__media video {
+  .braze-modal__link:hover .braze-modal__media img,
+  .braze-modal__link:hover .braze-modal__media video {
     transform: scale(1.06);
+  }
+
+  .braze-modal__link:hover .braze-modal__cta svg {
+    transform: translateX(3px);
+  }
+
+  .braze-modal__link:hover .braze-modal__cta {
+    color: var(--modal-cta-color-hover);
+  }
+
+  .braze-modal__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
   }
 
   .braze-modal::before {
@@ -174,15 +188,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 6px;
-    gap: 4px;
+    padding: 0 4px;
+    height: 18px;
     font-family: var(--modal-font);
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     line-height: 1;
+    letter-spacing: 0.02em;
     color: var(--badge-color);
     background: var(--badge-bg);
-    border-radius: 4px;
+    border-radius: 2px;
     text-transform: uppercase;
   }
 
@@ -195,8 +210,8 @@
     top: 12px;
     right: 12px;
     z-index: 2;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -279,9 +294,9 @@
     align-items: center;
     gap: 8px;
     font-family: var(--modal-font);
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 160%;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
     color: var(--modal-cta-color);
     background: none;
     border: none;
@@ -291,19 +306,11 @@
     padding: 0;
   }
 
-  .braze-modal__cta:hover {
-    color: var(--modal-cta-color-hover);
-  }
-
   .braze-modal__cta svg {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     flex-shrink: 0;
     transition: transform 0.2s ease;
-  }
-
-  .braze-modal__cta:hover svg {
-    transform: translateX(3px);
   }
 
   /* =======================================================================
@@ -429,6 +436,11 @@
 
   <div class="braze-modal-overlay" id="brazeModalOverlay">
     <div class="braze-modal-wrapper">
+      <a
+        class="braze-modal__link"
+        id="brazeModalCta"
+        href="/pikaso/feature"
+      >
       <div
         class="braze-modal"
         role="dialog"
@@ -460,20 +472,16 @@
             <h2 class="braze-modal__title" id="brazeModalTitle">{{ t.TITLE_KEY | default: t_en.TITLE_KEY }}</h2>
             <p class="braze-modal__text">{{ t.TEXT_KEY | default: t_en.TEXT_KEY }}</p>
           </div>
-          <a
-            class="braze-modal__cta"
-            id="brazeModalCta"
-            href="/pikaso/feature"
-            role="button"
-          >
+          <span class="braze-modal__cta">
             {{ t.CTA_KEY | default: t_en.CTA_KEY }}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 3 11 8 6 13" />
             </svg>
-          </a>
+          </span>
         </div>
 
       </div>
+      </a>
     </div>
   </div>
 
@@ -538,6 +546,7 @@
       if (closeBtn) {
         closeBtn.addEventListener('click', function (e) {
           e.preventDefault();
+          e.stopPropagation();
           closeModal();
         });
       }
