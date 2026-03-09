@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>In-App Message</title>
 <style>
   /* =======================================================================
      Pikaso Design Tokens — Inlined for Braze iframe isolation
@@ -464,6 +465,24 @@
 {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
 {%- else -%}{%- assign t = t_en -%}
 {%- endif -%}
+{%- assign k_s1_title = "STEP1_TITLE_KEY" -%}
+{%- assign k_s1_text = "STEP1_TEXT_KEY" -%}
+{%- assign k_s1_cta = "STEP1_CTA_KEY" -%}
+{%- assign k_s2_title = "STEP2_TITLE_KEY" -%}
+{%- assign k_s2_text = "STEP2_TEXT_KEY" -%}
+{%- assign k_s2_cta = "STEP2_CTA_KEY" -%}
+{%- assign k_s3_title = "STEP3_TITLE_KEY" -%}
+{%- assign k_s3_text = "STEP3_TEXT_KEY" -%}
+{%- assign k_s3_cta = "STEP3_CTA_KEY" -%}
+{%- assign k_s4_title = "STEP4_TITLE_KEY" -%}
+{%- assign k_s4_text = "STEP4_TEXT_KEY" -%}
+{%- assign k_s4_cta = "STEP4_CTA_KEY" -%}
+{%- assign k_s5_title = "STEP5_TITLE_KEY" -%}
+{%- assign k_s5_text = "STEP5_TEXT_KEY" -%}
+{%- assign k_s5_cta = "STEP5_CTA_KEY" -%}
+{%- assign k_s6_title = "STEP6_TITLE_KEY" -%}
+{%- assign k_s6_text = "STEP6_TEXT_KEY" -%}
+{%- assign k_s6_cta = "STEP6_CTA_KEY" -%}
 
   <div class="braze-modal-overlay" id="brazeModalOverlay">
     <div class="braze-modal-wrapper">
@@ -511,49 +530,49 @@
         {
           media: '${step1_image}',
           mediaType: 'image',
-          title: '{{ t.STEP1_TITLE_KEY | default: t_en.STEP1_TITLE_KEY }}',
-          text:  '{{ t.STEP1_TEXT_KEY | default: t_en.STEP1_TEXT_KEY }}',
-          cta:   '{{ t.STEP1_CTA_KEY | default: t_en.STEP1_CTA_KEY }}',
+          title: '{{ t[k_s1_title] | default: t_en[k_s1_title] }}',
+          text:  '{{ t[k_s1_text] | default: t_en[k_s1_text] }}',
+          cta:   '{{ t[k_s1_cta] | default: t_en[k_s1_cta] }}',
           url:   ''
         },
         {
           media: '${step2_image}',
           mediaType: 'image',
-          title: '{{ t.STEP2_TITLE_KEY | default: t_en.STEP2_TITLE_KEY }}',
-          text:  '{{ t.STEP2_TEXT_KEY | default: t_en.STEP2_TEXT_KEY }}',
-          cta:   '{{ t.STEP2_CTA_KEY | default: t_en.STEP2_CTA_KEY }}',
+          title: '{{ t[k_s2_title] | default: t_en[k_s2_title] }}',
+          text:  '{{ t[k_s2_text] | default: t_en[k_s2_text] }}',
+          cta:   '{{ t[k_s2_cta] | default: t_en[k_s2_cta] }}',
           url:   ''
         },
         {
           media: '${step3_image}',
           mediaType: 'image',
-          title: '{{ t.STEP3_TITLE_KEY | default: t_en.STEP3_TITLE_KEY }}',
-          text:  '{{ t.STEP3_TEXT_KEY | default: t_en.STEP3_TEXT_KEY }}',
-          cta:   '{{ t.STEP3_CTA_KEY | default: t_en.STEP3_CTA_KEY }}',
+          title: '{{ t[k_s3_title] | default: t_en[k_s3_title] }}',
+          text:  '{{ t[k_s3_text] | default: t_en[k_s3_text] }}',
+          cta:   '{{ t[k_s3_cta] | default: t_en[k_s3_cta] }}',
           url:   ''
         },
         {
           media: '${step4_image}',
           mediaType: 'image',
-          title: '{{ t.STEP4_TITLE_KEY | default: t_en.STEP4_TITLE_KEY }}',
-          text:  '{{ t.STEP4_TEXT_KEY | default: t_en.STEP4_TEXT_KEY }}',
-          cta:   '{{ t.STEP4_CTA_KEY | default: t_en.STEP4_CTA_KEY }}',
+          title: '{{ t[k_s4_title] | default: t_en[k_s4_title] }}',
+          text:  '{{ t[k_s4_text] | default: t_en[k_s4_text] }}',
+          cta:   '{{ t[k_s4_cta] | default: t_en[k_s4_cta] }}',
           url:   ''
         },
         {
           media: '${step5_image}',
           mediaType: 'image',
-          title: '{{ t.STEP5_TITLE_KEY | default: t_en.STEP5_TITLE_KEY }}',
-          text:  '{{ t.STEP5_TEXT_KEY | default: t_en.STEP5_TEXT_KEY }}',
-          cta:   '{{ t.STEP5_CTA_KEY | default: t_en.STEP5_CTA_KEY }}',
+          title: '{{ t[k_s5_title] | default: t_en[k_s5_title] }}',
+          text:  '{{ t[k_s5_text] | default: t_en[k_s5_text] }}',
+          cta:   '{{ t[k_s5_cta] | default: t_en[k_s5_cta] }}',
           url:   ''
         },
         {
           media: '${step6_image}',
           mediaType: 'image',
-          title: '{{ t.STEP6_TITLE_KEY | default: t_en.STEP6_TITLE_KEY }}',
-          text:  '{{ t.STEP6_TEXT_KEY | default: t_en.STEP6_TEXT_KEY }}',
-          cta:   '{{ t.STEP6_CTA_KEY | default: t_en.STEP6_CTA_KEY }}',
+          title: '{{ t[k_s6_title] | default: t_en[k_s6_title] }}',
+          text:  '{{ t[k_s6_text] | default: t_en[k_s6_text] }}',
+          cta:   '{{ t[k_s6_cta] | default: t_en[k_s6_cta] }}',
           url:   '${final_cta_url}'
         }
       ];

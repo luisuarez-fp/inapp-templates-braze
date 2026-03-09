@@ -235,10 +235,12 @@ function launchReplacements(html, values) {
     }
   }
   if (values.badge_key) {
+    const badgeAssign = `{%- assign k_badge = "${values.badge_key}" -%}\n`;
     html = html.replace(
       /(class="braze-modal__badge">)[^<]*/,
-      `$1{{ t.${values.badge_key} | default: t_en.${values.badge_key} }}`
+      `$1{{ t[k_badge] | default: t_en[k_badge] }}`
     );
+    html = html.replace(/({%- endif -%}\n)/, `$1${badgeAssign}`);
   }
   if (values.title_key) html = replaceKey(html, 'TITLE_KEY', values.title_key);
   if (values.text_key) html = replaceKey(html, 'TEXT_KEY', values.text_key);
@@ -329,9 +331,11 @@ function onboardingReplacements(html, values) {
   }
 
   if (values.step_counter_key) {
+    const counterAssign = `{%- assign k_counter = "${values.step_counter_key}" -%}\n`;
+    html = html.replace(/({%- endif -%}\n)/, `$1${counterAssign}`);
     html = html.replace(
       /document\.getElementById\('brazeStepCounter'\)\.textContent = 'Step ' \+ \(index \+ 1\) \+ ' of ' \+ STEPS\.length;/,
-      `var _cf = '{{ t.${values.step_counter_key} | default: t_en.${values.step_counter_key} }}';\n        document.getElementById('brazeStepCounter').textContent = _cf.replace('%1$s', (index + 1)).replace('%2$s', STEPS.length);`
+      `var _cf = '{{ t[k_counter] | default: t_en[k_counter] }}';\n        document.getElementById('brazeStepCounter').textContent = _cf.replace('%1$s', (index + 1)).replace('%2$s', STEPS.length);`
     );
   }
 
@@ -379,11 +383,7 @@ function slideupReplacements(html, values) {
 // --- Helpers ---
 
 function replaceKey(html, placeholder, actualKey) {
-  const pattern = new RegExp(
-    `\\{\\{\\s*t\\.${placeholder}\\s*\\|\\s*default:\\s*t_en\\.${placeholder}\\s*\\}\\}`,
-    'g'
-  );
-  return html.replace(pattern, `{{ t.${actualKey} | default: t_en.${actualKey} }}`);
+  return html.replace(new RegExp(`"${placeholder}"`, 'g'), `"${actualKey}"`);
 }
 
 export function getTemplate(id) {

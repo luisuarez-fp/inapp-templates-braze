@@ -14,9 +14,14 @@ export async function generatePreviewHTML(template, values) {
 
   const translations = await fetchTranslations();
 
+  const keyMap = {};
+  html.replace(/\{%-?\s*assign\s+(\w+)\s*=\s*"([^"]+)"\s*-%\}/g, (_, varName, keyValue) => {
+    keyMap[varName] = keyValue;
+  });
+
   html = html.replace(
-    /\{\{\s*t\.([\w-]+)\s*\|\s*default:\s*t_en\.[\w-]+\s*\}\}/g,
-    (_, key) => translations[key] || key
+    /\{\{\s*t\[(\w+)\]\s*\|\s*default:\s*t_en\[\1\]\s*\}\}/g,
+    (_, varName) => translations[keyMap[varName]] || keyMap[varName] || varName
   );
 
   html = html.replace(/\{%-?[\s\S]*?-%\}/g, '');
