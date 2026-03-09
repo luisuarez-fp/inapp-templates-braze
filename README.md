@@ -2,6 +2,9 @@
 
 Standalone HTML templates for Braze campaigns that match the Pikaso design system.
 
+<img width="2425" height="1064" alt="Modals preview" src="https://github.com/user-attachments/assets/12cec385-49eb-4a82-8786-a8a25f460804" />
+
+
 ## Why standalone?
 
 Braze Custom HTML In-App Messages render inside an **iframe** managed by the SDK. This means they cannot inherit CSS custom properties or Tailwind classes from the parent app. Each template inlines the resolved design token values (colors, typography, spacing, shadows) directly, ensuring visual consistency with Pikaso.
