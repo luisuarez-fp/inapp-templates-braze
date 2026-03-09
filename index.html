@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Braze InApp Builder</title>
+  <link rel="stylesheet" href="app/styles.css" />
+</head>
+<body>
+
+  <!-- Carousel View -->
+  <div id="carouselView" class="app-view active">
+    <header class="app-header">
+      <div>
+        <h1 class="app-header__title">Braze InApp Builder</h1>
+        <p class="app-header__subtitle">Select a template to start editing</p>
+      </div>
+    </header>
+    <div class="carousel">
+      <div id="carouselGrid" class="carousel__grid"></div>
+    </div>
+  </div>
+
+  <!-- Editor View -->
+  <div id="editorView" class="app-view">
+    <header class="editor-header">
+      <button id="editorBack" class="editor-header__back" aria-label="Back to templates">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <span id="editorName" class="editor-header__name"></span>
+      <div class="editor-header__actions">
+        <button id="themeToggle" class="editor-theme-toggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          Light
+        </button>
+      </div>
+    </header>
+    <div id="editorCanvas" class="editor-canvas">
+      <div id="editorPreview" class="ed-preview"></div>
+    </div>
+  </div>
+
+  <!-- Export Bar -->
+  <div id="exportBar" class="export-bar">
+    <button id="btnPreviewTab" class="export-btn export-btn--secondary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </svg>
+      Preview in tab
+    </button>
+    <button id="btnCopyHtml" class="export-btn export-btn--primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </svg>
+      Copy HTML
+    </button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="toast-notification"></div>
+
+  <script type="module" src="app/main.js"></script>
+</body>
+</html>

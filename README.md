@@ -4,6 +4,23 @@ Standalone HTML templates for Braze campaigns that match the Pikaso design syste
 
 <img width="2425" height="1064" alt="Modals preview" src="https://github.com/user-attachments/assets/12cec385-49eb-4a82-8786-a8a25f460804" />
 
+## Visual Builder
+
+Use the **InApp Builder** to configure templates visually — no need to edit HTML manually.
+
+**Open the builder:** [https://YOUR_ORG.github.io/inapp-templates-braze/](index.html) (or serve locally with `npx serve .`)
+
+1. Select a template from the carousel
+2. Click directly on the image, title, body text, or CTA to edit
+3. Enter Lokalise keys and URLs in the popover
+4. Click **Copy HTML** to get the complete Braze-ready HTML
+
+### Local development
+
+```bash
+npx serve .
+# Open http://localhost:3000
+```
 
 ## Why standalone?
 
