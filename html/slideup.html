@@ -418,26 +418,50 @@
         }
       } catch (e) {}
 
+      var ctaClicked = false;
+      var closing = false;
+
+      function notifyParent(action) {
+        try {
+          window.parent.postMessage({ type: 'braze-iam-event', action: action }, '*');
+        } catch (e) {}
+      }
+
+      function dismissBraze() {
+        if (typeof brazeBridge !== 'undefined') {
+          brazeBridge.closeMessage();
+        }
+      }
+
       /* -----------------------------------------------------------------
          Close toast with slide-down animation
          ----------------------------------------------------------------- */
       function closeToast() {
+        if (closing) return;
+        closing = true;
+
         var toast = document.getElementById('brazeToast');
-        if (!toast) return;
+        if (!toast) { dismissBraze(); return; }
+
+        if (!ctaClicked) {
+          notifyParent('closed');
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.logClick('close');
+            brazeBridge.requestImmediateDataFlush();
+          }
+        }
 
         toast.classList.add('braze-toast--closing');
 
-        toast.addEventListener('animationend', function () {
-          if (typeof brazeBridge !== 'undefined') {
-            brazeBridge.closeMessage();
-          }
-        });
+        var dismissed = false;
+        function dismissOnce() {
+          if (dismissed) return;
+          dismissed = true;
+          dismissBraze();
+        }
 
-        setTimeout(function () {
-          if (typeof brazeBridge !== 'undefined') {
-            brazeBridge.closeMessage();
-          }
-        }, 300);
+        toast.addEventListener('animationend', dismissOnce);
+        setTimeout(dismissOnce, 300);
       }
 
       /* -----------------------------------------------------------------
@@ -458,10 +482,15 @@
       if (actionBtn) {
         actionBtn.addEventListener('click', function (e) {
           e.preventDefault();
+          if (ctaClicked) return;
+          ctaClicked = true;
           var url = actionBtn.getAttribute('href');
 
+          notifyParent('clicked');
+
           if (typeof brazeBridge !== 'undefined') {
-            brazeBridge.logClick();
+            brazeBridge.logClick('cta_click');
+            brazeBridge.requestImmediateDataFlush();
           }
 
           if (url && url !== '${cta_url}' && url.trim() !== '') {

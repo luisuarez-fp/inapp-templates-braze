@@ -660,19 +660,48 @@
 
       goToStep(0);
 
+      var ctaClicked = false;
+      var closing = false;
+
+      function notifyParent(action) {
+        try {
+          window.parent.postMessage({ type: 'braze-iam-event', action: action }, '*');
+        } catch (e) {}
+      }
+
+      function dismissBraze() {
+        if (typeof brazeBridge !== 'undefined') brazeBridge.closeMessage();
+      }
+
       /* -----------------------------------------------------------------
          Close modal with animation
          ----------------------------------------------------------------- */
       function closeModal() {
+        if (closing) return;
+        closing = true;
+
         var overlay = document.getElementById('brazeModalOverlay');
-        if (!overlay) return;
+        if (!overlay) { dismissBraze(); return; }
+
+        if (!ctaClicked) {
+          notifyParent('closed');
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.logClick('close');
+            brazeBridge.requestImmediateDataFlush();
+          }
+        }
+
         overlay.classList.add('braze-modal-overlay--closing');
-        overlay.addEventListener('animationend', function () {
-          if (typeof brazeBridge !== 'undefined') brazeBridge.closeMessage();
-        });
-        setTimeout(function () {
-          if (typeof brazeBridge !== 'undefined') brazeBridge.closeMessage();
-        }, 300);
+
+        var dismissed = false;
+        function dismissOnce() {
+          if (dismissed) return;
+          dismissed = true;
+          dismissBraze();
+        }
+
+        overlay.addEventListener('animationend', dismissOnce);
+        setTimeout(dismissOnce, 300);
       }
 
       /* Close button */
@@ -692,8 +721,17 @@
           if (currentStep < STEPS.length - 1) {
             goToStep(currentStep + 1);
           } else {
-            if (typeof brazeBridge !== 'undefined') brazeBridge.logClick();
+            if (ctaClicked) return;
+            ctaClicked = true;
             var url = ctaBtn.getAttribute('href');
+
+            notifyParent('clicked');
+
+            if (typeof brazeBridge !== 'undefined') {
+              brazeBridge.logClick('cta_click');
+              brazeBridge.requestImmediateDataFlush();
+            }
+
             if (url && url !== '#' && url !== '${final_cta_url}' && url.trim() !== '') {
               window.parent.location.href = url;
             }

@@ -513,26 +513,50 @@
         }
       } catch (e) {}
 
+      var ctaClicked = false;
+      var closing = false;
+
+      function notifyParent(action) {
+        try {
+          window.parent.postMessage({ type: 'braze-iam-event', action: action }, '*');
+        } catch (e) {}
+      }
+
+      function dismissBraze() {
+        if (typeof brazeBridge !== 'undefined') {
+          brazeBridge.closeMessage();
+        }
+      }
+
       /* -----------------------------------------------------------------
          Close modal with animation
          ----------------------------------------------------------------- */
       function closeModal() {
+        if (closing) return;
+        closing = true;
+
         var overlay = document.getElementById('brazeModalOverlay');
-        if (!overlay) return;
+        if (!overlay) { dismissBraze(); return; }
+
+        if (!ctaClicked) {
+          notifyParent('closed');
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.logClick('close');
+            brazeBridge.requestImmediateDataFlush();
+          }
+        }
 
         overlay.classList.add('braze-modal-overlay--closing');
 
-        overlay.addEventListener('animationend', function () {
-          if (typeof brazeBridge !== 'undefined') {
-            brazeBridge.closeMessage();
-          }
-        });
+        var dismissed = false;
+        function dismissOnce() {
+          if (dismissed) return;
+          dismissed = true;
+          dismissBraze();
+        }
 
-        setTimeout(function () {
-          if (typeof brazeBridge !== 'undefined') {
-            brazeBridge.closeMessage();
-          }
-        }, 300);
+        overlay.addEventListener('animationend', dismissOnce);
+        setTimeout(dismissOnce, 300);
       }
 
       /* -----------------------------------------------------------------
@@ -565,10 +589,42 @@
       if (ctaBtn) {
         ctaBtn.addEventListener('click', function (e) {
           e.preventDefault();
+          if (ctaClicked) return;
+          ctaClicked = true;
           var url = ctaBtn.getAttribute('href');
 
+          notifyParent('clicked');
+
           if (typeof brazeBridge !== 'undefined') {
-            brazeBridge.logClick();
+            brazeBridge.logClick('cta_click');
+            brazeBridge.requestImmediateDataFlush();
+          }
+
+          if (url && url !== '${cta_url}' && url.trim() !== '') {
+            window.parent.location.href = url;
+          }
+
+          closeModal();
+        });
+      }
+
+      /* -----------------------------------------------------------------
+         Image click — same navigation as CTA, tracked separately
+         ----------------------------------------------------------------- */
+      var imgWrapper = document.querySelector('.braze-modal__image-wrapper');
+      if (imgWrapper) {
+        imgWrapper.style.cursor = 'pointer';
+        imgWrapper.addEventListener('click', function () {
+          if (ctaClicked) return;
+          ctaClicked = true;
+          var ctaEl = document.getElementById('brazeModalCta');
+          var url = ctaEl ? ctaEl.getAttribute('href') : '';
+
+          notifyParent('clicked');
+
+          if (typeof brazeBridge !== 'undefined') {
+            brazeBridge.logClick('img_click');
+            brazeBridge.requestImmediateDataFlush();
           }
 
           if (url && url !== '${cta_url}' && url.trim() !== '') {

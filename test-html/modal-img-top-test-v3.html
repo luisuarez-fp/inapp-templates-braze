@@ -7,9 +7,8 @@
 <style>
   /* =======================================================================
      Pikaso Design Tokens — Inlined for Braze iframe isolation
-     Based on Figma: CRM - Inapps (node 34-139)
+     Based on Figma: CRM - Inapps (node 30-291)
      Theme-aware: detects light/dark from parent app
-     Variant: modal_img_right (horizontal layout, image on the right)
      ======================================================================= */
 
   @font-face {
@@ -32,25 +31,33 @@
 
   /* =====================================================================
      Light theme (default)
+     Resolved from: frontend/code/apps/core/tailwind/tailwind.css :root
      ===================================================================== */
   :root {
+    /* Modal structure */
     --modal-overlay: hsla(0, 0%, 0%, 0.5);
     --modal-radius: 24px;
     --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     --modal-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    --modal-max-width: 768px;
+    --modal-max-width: 600px;
 
+    /* Surface — from --surface-modal */
     --modal-bg: hsl(0, 0%, 100%);
+
+    /* Foregrounds — from --surface-foreground-* */
     --modal-title-color: hsl(0, 0%, 5%);
     --modal-text-color: hsl(0, 0%, 36%);
 
+    /* CTA button — from --secondary-* (dark bg, white text in light mode) */
     --modal-cta-bg: hsl(0, 0%, 5%);
     --modal-cta-bg-hover: hsl(0, 0%, 26%);
     --modal-cta-bg-active: hsl(0, 0%, 36%);
     --modal-cta-color: hsl(0, 0%, 100%);
 
+    /* Border — #0D0D0D at 20% opacity, inside */
     --modal-border: rgba(13, 13, 13, 0.2);
 
+    /* Close button — from --default-* (neutral, theme-aware) */
     --modal-close-bg: hsla(0, 0%, 47%, 0.1);
     --modal-close-bg-hover: hsla(0, 0%, 47%, 0.15);
     --modal-close-color: hsl(0, 0%, 5%);
@@ -58,9 +65,11 @@
 
   /* =====================================================================
      Dark theme
+     Resolved from: frontend/code/apps/core/tailwind/tailwind.css .dark
      ===================================================================== */
   .dark {
     --modal-bg: hsl(0, 0%, 12%);
+
     --modal-title-color: hsl(0, 0%, 97%);
     --modal-text-color: hsl(0, 0%, 69%);
 
@@ -112,7 +121,7 @@
   }
 
   /* =======================================================================
-     Modal Card — horizontal layout
+     Modal Card
      ======================================================================= */
 
   .braze-modal-wrapper {
@@ -134,7 +143,7 @@
     box-shadow: var(--modal-shadow);
     overflow: hidden;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
   }
 
   .braze-modal::after {
@@ -148,13 +157,12 @@
   }
 
   /* =======================================================================
-     Media — right side, ~40% width, full height (image or video)
+     Hero Media (image or video)
      ======================================================================= */
 
   .braze-modal__image-wrapper {
     position: relative;
-    width: 40%;
-    min-height: 600px;
+    width: 100%;
     overflow: hidden;
     flex-shrink: 0;
   }
@@ -162,11 +170,9 @@
   .braze-modal__image,
   .braze-modal__image-wrapper video {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: block;
     object-fit: cover;
-    position: absolute;
-    inset: 0;
   }
 
   /* =======================================================================
@@ -176,7 +182,7 @@
   .braze-modal__close {
     position: absolute;
     top: 0;
-    right: -40px;
+    right: -40px; /* 32px button + 8px gap */
     z-index: 2;
     width: 32px;
     height: 32px;
@@ -201,23 +207,21 @@
   }
 
   /* =======================================================================
-     Content — left side, ~60%, vertical flex
+     Content
      ======================================================================= */
 
   .braze-modal__content {
-    flex: 1;
-    padding: 32px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     overflow-y: auto;
-    justify-content: flex-start;
   }
 
   .braze-modal__title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    line-height: 1.5;
+    font-size: 1.125rem;       /* text-lg */
+    font-weight: 600;          /* font-semibold */
+    line-height: 1.5;          /* lineHeight.snug */
     color: var(--modal-title-color);
   }
 
@@ -228,29 +232,13 @@
     color: var(--modal-text-color);
   }
 
-  .braze-modal__list {
-    list-style: disc;
-    padding-left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .braze-modal__list li {
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--modal-text-color);
-  }
-
   /* =======================================================================
-     CTA Button — bottom-right, pushed down with margin-top auto
+     CTA Button — inside content area, right-aligned
      ======================================================================= */
 
   .braze-modal__cta-wrapper {
     display: flex;
     justify-content: flex-end;
-    margin-top: auto;
     padding-top: 8px;
   }
 
@@ -258,19 +246,19 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
-    padding: 0 16px;
+    height: 40px;              /* h-10 (md size) */
+    padding: 0 16px;           /* px-4 (md size) */
     font-family: var(--modal-font);
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.875rem;       /* text-sm (md size) */
+    font-weight: 600;          /* font-semibold */
     line-height: 1;
     color: var(--modal-cta-color);
     background: var(--modal-cta-bg);
     border: none;
-    border-radius: 8px;
+    border-radius: 8px;        /* rounded-lg */
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.15s ease-in-out;
+    transition: background 0.15s ease-in-out;  /* duration-150 */
     white-space: nowrap;
   }
 
@@ -334,34 +322,7 @@
      Responsive
      ======================================================================= */
 
-  /* Tablet: close button inside (modal 768px + button 40px + padding 32px) */
-  @media (max-width: 840px) {
-    .braze-modal__close {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      z-index: 10;
-    }
-  }
-
-  /* Mobile: stack vertically */
   @media (max-width: 640px) {
-    .braze-modal {
-      flex-direction: column;
-    }
-
-    .braze-modal__image-wrapper {
-      width: 100%;
-      min-height: auto;
-      max-height: 200px;
-    }
-
-    .braze-modal__image {
-      position: static;
-      height: auto;
-      max-height: 200px;
-    }
-
     .braze-modal__content {
       padding: 20px 16px;
     }
@@ -375,21 +336,28 @@
     .braze-modal-wrapper {
       max-width: 100%;
     }
+
+    .braze-modal__close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
   }
 </style>
 </head>
 <body>
   <!--
-    Braze Custom HTML In-App Message Template: Modal Image Right
-    =============================================================
-    Design source: Figma CRM - Inapps (node 34-139)
-    Layout: horizontal — content left, image right
+    Braze Custom HTML In-App Message Template: Default Modal
+    =========================================================
+    Design source: Figma CRM - Inapps (node 30-291)
     Theme: auto-detects light/dark from parent app
     Translations: replace placeholder keys with your i18n values
 
     To use this template:
-      1. Replace translation keys (data-i18n + hidden spans) with your translation keys
-      2. Set image src and CTA href
+      1. Replace TITLE_KEY, MESSAGE_KEY, CTA_KEY below with your translation keys
+      2. Set ${image_url}, ${image_alt}, ${cta_url} as Braze message extras
+
+    Example keys: 2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Title
   -->
 
 {%- assign lang = {{custom_attribute.${user_locale}}} | default: ${language} | default: 'en' -%}
@@ -448,9 +416,9 @@
 {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
 {%- else -%}{%- assign t = t_en -%}
 {%- endif -%}
-{%- assign k_title = "TITLE_KEY" -%}
-{%- assign k_text = "TEXT_KEY" -%}
-{%- assign k_cta = "CTA_KEY" -%}
+{%- assign k_title = "2026_W10_IAM_Webinar_Cinematic_Videos_Kling_3_0_IAM_Main_Title_v3_today_live" -%}
+{%- assign k_text = "2026_W10_IAM_Webinar_Cinematic_Videos_Kling_3_0_IAM_Main_Text_v3_today_live" -%}
+{%- assign k_cta = "2026_W10_IAM_Webinar_Cinematic_Videos_Kling_3_0_IAM_Main_CTA_v3_today_live" -%}
 
   <div class="braze-modal-overlay" id="brazeModalOverlay">
     <div class="braze-modal-wrapper">
@@ -470,7 +438,17 @@
 
       <div class="braze-modal" role="dialog" aria-modal="true" aria-labelledby="brazeModalTitle">
 
-        <!-- Content: left side -->
+        <!-- Hero Media: use <img> for images or <video> for video -->
+        <div class="braze-modal__image-wrapper">
+          <img
+            class="braze-modal__image"
+            src="https://cdn.braze.eu/appboy/communication/assets/image_assets/images/69b15e406aa7e90f51c50e77/original.png?1773231680"
+            alt=""
+            loading="eager"
+          />
+          <!-- <video src="VIDEO_URL" autoplay muted loop playsinline></video> -->
+        </div>
+
         <div class="braze-modal__content">
           <h2 class="braze-modal__title" id="brazeModalTitle">{{ t[k_title] | default: t_en[k_title] }}</h2>
           <p class="braze-modal__text">{{ t[k_text] | default: t_en[k_text] }}</p>
@@ -478,23 +456,12 @@
             <a
               class="braze-modal__cta"
               id="brazeModalCta"
-              href="${cta_url}"
+              href="https://www.youtube.com/watch?v=oPF87Zd9eAw"
               role="button"
             >
               {{ t[k_cta] | default: t_en[k_cta] }}
             </a>
           </div>
-        </div>
-
-        <!-- Media: right side — use <img> or <video> -->
-        <div class="braze-modal__image-wrapper">
-          <img
-            class="braze-modal__image"
-            src="${image_url}"
-            alt="${image_alt}"
-            loading="eager"
-          />
-          <!-- <video src="VIDEO_URL" autoplay muted loop playsinline></video> -->
         </div>
 
       </div>
@@ -505,13 +472,17 @@
     (function () {
       /* -----------------------------------------------------------------
          Theme detection
+         Reads the parent document's <html> class to match the app theme.
+         Falls back to light mode if parent is inaccessible (cross-origin).
          ----------------------------------------------------------------- */
       try {
         var parentDoc = window.parent.document.documentElement;
         if (parentDoc && parentDoc.classList.contains('dark')) {
           document.documentElement.classList.add('dark');
         }
-      } catch (e) {}
+      } catch (e) {
+        // Cross-origin — default to light theme
+      }
 
       var ctaClicked = false;
       var closing = false;
@@ -600,8 +571,8 @@
             brazeBridge.requestImmediateDataFlush();
           }
 
-          if (url && url !== '${cta_url}' && url.trim() !== '') {
-            window.parent.location.href = url;
+          if (url && url.trim() !== '') {
+            window.open(url, '_blank');
           }
 
           closeModal();
@@ -627,8 +598,8 @@
             brazeBridge.requestImmediateDataFlush();
           }
 
-          if (url && url !== '${cta_url}' && url.trim() !== '') {
-            window.parent.location.href = url;
+          if (url && url.trim() !== '') {
+            window.open(url, '_blank');
           }
 
           closeModal();

@@ -5,12 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>In-App Message</title>
 <style>
-  /* =======================================================================
-     Pikaso Design Tokens — Inlined for Braze iframe isolation
-     Based on Figma: CRM - Inapps (node 113-1822)
-     Compact launch card with background image + gradient overlay
-     ======================================================================= */
-
   @font-face {
     font-family: 'Inter';
     src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
@@ -60,10 +54,6 @@
     --badge-color: #fff;
   }
 
-  /* =======================================================================
-     Reset & Base
-     ======================================================================= */
-
   *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -77,10 +67,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
-  /* =======================================================================
-     Overlay
-     ======================================================================= */
 
   .braze-modal-overlay {
     position: fixed;
@@ -102,10 +88,6 @@
       padding: 0 24px 24px 24px;
     }
   }
-
-  /* =======================================================================
-     Modal Card
-     ======================================================================= */
 
   .braze-modal-wrapper {
     position: relative;
@@ -185,10 +167,6 @@
     z-index: 1;
   }
 
-  /* =======================================================================
-     Badge — "NEW" pill, top-left
-     ======================================================================= */
-
   .braze-modal__badge {
     position: absolute;
     top: 15px;
@@ -209,10 +187,6 @@
     border-radius: 4px;
     text-transform: uppercase;
   }
-
-  /* =======================================================================
-     Close Button — inside card, top-right
-     ======================================================================= */
 
   .braze-modal__close {
     position: absolute;
@@ -240,10 +214,6 @@
     height: 14px;
     color: var(--modal-close-color);
   }
-
-  /* =======================================================================
-     Content — overlays image at the bottom via z-index
-     ======================================================================= */
 
   .braze-modal__content {
     position: relative;
@@ -292,10 +262,6 @@
     color: var(--modal-text-color);
   }
 
-  /* =======================================================================
-     CTA — text link style with chevron
-     ======================================================================= */
-
   .braze-modal__cta {
     display: flex;
     height: 24px;
@@ -321,10 +287,6 @@
     flex-shrink: 0;
     transition: transform 0.2s ease;
   }
-
-  /* =======================================================================
-     Animations
-     ======================================================================= */
 
   @keyframes fadeIn {
     from { opacity: 0; }
@@ -372,19 +334,6 @@
 </style>
 </head>
 <body>
-  <!--
-    Braze Custom HTML In-App Message Template: Launch Modal
-    =========================================================
-    Design source: Figma CRM - Inapps (node 113-1822)
-    Compact card (256×274) with background image + dark gradient overlay.
-    Always dark theme — text is always white over image.
-
-    To use this template:
-      1. Replace TITLE_KEY, TEXT_KEY, CTA_KEY with your translation keys
-      2. Replace BADGE_KEY with your translation key (or hardcode "NEW")
-      3. Set media: replace <img src> or swap to <video src autoplay muted loop playsinline>
-      4. Set CTA href
-  -->
 
 {%- assign lang = {{custom_attribute.${user_locale}}} | default: ${language} | default: 'en' -%}
 {%- case lang -%}
@@ -442,16 +391,16 @@
 {%- connected_content {{ json_url }} :save t :cache_max_age 3600 -%}
 {%- else -%}{%- assign t = t_en -%}
 {%- endif -%}
-{%- assign k_title = "TITLE_KEY" -%}
-{%- assign k_text = "TEXT_KEY" -%}
-{%- assign k_cta = "CTA_KEY" -%}
+{%- assign k_title = "2026_W10_IAM_Webinar_Cinematic_Videos_Kling_3_0_IAM_Main_Title_v3_today_live" -%}
+{%- assign k_text = "2026_W10_IAM_Webinar_Cinematic_Videos_Kling_3_0_IAM_Main_Text_v3_today_live" -%}
+{%- assign k_cta = "2026_W10_IAM_Webinar_Cinematic_Videos_Kling_3_0_IAM_Main_CTA_v3_today_live" -%}
 
   <div class="braze-modal-overlay" id="brazeModalOverlay">
     <div class="braze-modal-wrapper">
       <div
         class="braze-modal__link"
         id="brazeModalCard"
-        data-href="/pikaso/feature"
+        data-href="https://www.youtube.com/watch?v=oPF87Zd9eAw"
       >
       <div
         class="braze-modal"
@@ -459,13 +408,11 @@
         aria-modal="true"
         aria-labelledby="brazeModalTitle"
       >
-        <!-- Media: use <img> for images or <video autoplay muted loop playsinline> for video -->
         <div class="braze-modal__media">
           <img src="https://cdn.braze.eu/appboy/communication/assets/image_assets/images/69945953c1627f4106e11467/original.png?1771329875" alt="" />
-          <!-- <video src="VIDEO_URL" autoplay muted loop playsinline></video> -->
         </div>
 
-        <span class="braze-modal__badge">NEW</span>
+        <span class="braze-modal__badge">TEST V3</span>
 
         <button
           class="braze-modal__close"
@@ -603,7 +550,7 @@
           }
 
           if (url && url.trim() !== '') {
-            window.parent.location.href = url;
+            window.open(url, '_blank');
           }
 
           closeModal();
