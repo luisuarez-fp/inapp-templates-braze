@@ -489,7 +489,7 @@
 
       function notifyParent(action) {
         try {
-          window.parent.postMessage({ type: 'braze-iam-event', action: action, nonce: window.__brazeNonce || '' }, '*');
+          window.parent.postMessage({ type: 'braze-iam-event', action: action }, '*');
         } catch (e) {}
       }
 
