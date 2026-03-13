@@ -436,6 +436,26 @@ body {
   white-space: nowrap;
 }
 
+/* Full Image Modal Replica */
+
+.ed-modal--full-image {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+}
+
+.ed-modal--full-image .ed-modal__close {
+  top: 12px;
+  right: 12px;
+  background: rgba(13, 13, 13, 0.4);
+  color: #fff;
+}
+
+.ed-modal__image--full {
+  width: 100%;
+  aspect-ratio: 6 / 5;
+}
+
 /* Launch Modal Replica */
 
 .ed-launch {

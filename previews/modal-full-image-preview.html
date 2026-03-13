@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modal Full Image — Preview</title>
+<style>
+
+  :root {
+    --modal-overlay: hsla(0, 0%, 0%, 0.5);
+    --modal-radius: 24px;
+    --modal-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --modal-max-width: 600px;
+    --modal-border: rgba(13, 13, 13, 0.2);
+
+    --modal-close-bg: rgba(13, 13, 13, 0.4);
+    --modal-close-bg-hover: rgba(13, 13, 13, 0.6);
+    --modal-close-color: #fff;
+  }
+
+  /* Reset & Base */
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.2s ease;
+    background: #f0f0f0;
+  }
+
+  body.theme-dark {
+    background: #0d0d0d;
+  }
+
+  /* Overlay */
+
+  .braze-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-overlay);
+    z-index: 9999;
+    padding: 16px;
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  /* Modal Card — full image */
+
+  .braze-modal-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: var(--modal-max-width);
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(12px);
+    animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+  }
+
+  .braze-modal {
+    position: relative;
+    width: 100%;
+    border-radius: var(--modal-radius);
+    box-shadow: var(--modal-shadow);
+    overflow: hidden;
+  }
+
+  .braze-modal::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--modal-radius);
+    box-shadow: inset 0 0 0 1px var(--modal-border);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* Image */
+
+  .braze-modal__image-wrapper {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .braze-modal__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 6 / 5;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Close Button — inside card, top-right */
+
+  .braze-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 4;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-close-bg);
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .braze-modal__close:hover {
+    background: var(--modal-close-bg-hover);
+  }
+
+  .braze-modal__close svg {
+    width: 14px;
+    height: 14px;
+    color: var(--modal-close-color);
+  }
+
+  /* Animations */
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(12px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes scaleOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(12px);
+    }
+  }
+
+  .braze-modal-overlay--closing {
+    animation: fadeOut 0.15s ease-in forwards;
+  }
+
+  .braze-modal-overlay--closing .braze-modal-wrapper {
+    animation: scaleOut 0.15s ease-in forwards;
+  }
+
+  /* Responsive */
+
+  @media (max-width: 425px) {
+    .braze-modal-wrapper {
+      max-width: 100%;
+    }
+  }
+
+  /* Preview-only styles */
+
+  .preview-controls {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 99999;
+    display: flex;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .preview-controls button {
+    padding: 8px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border: none;
+  }
+
+  .preview-controls button:hover {
+    opacity: 0.85;
+  }
+
+  .preview-controls__light {
+    background: #f7f7f7;
+    color: #0d0d0d;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
+  .preview-controls__dark {
+    background: #1f1f1f;
+    color: #f7f7f7;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body>
+
+  <!-- Preview-only: theme toggle -->
+  <div class="preview-controls">
+    <button class="preview-controls__light" onclick="setTheme('light')">Light</button>
+    <button class="preview-controls__dark" onclick="setTheme('dark')">Dark</button>
+  </div>
+
+  <div class="braze-modal-overlay" id="brazeModalOverlay">
+    <div class="braze-modal-wrapper">
+      <div class="braze-modal" role="dialog" aria-modal="true" aria-label="Promotional message">
+
+        <button
+          class="braze-modal__close"
+          id="brazeModalClose"
+          aria-label="Close"
+          type="button"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="4" x2="12" y2="12" />
+            <line x1="12" y1="4" x2="4" y2="12" />
+          </svg>
+        </button>
+
+        <div class="braze-modal__image-wrapper" id="brazeModalImage" data-href="https://pikaso.com/features">
+          <img
+            class="braze-modal__image"
+            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=500&fit=crop"
+            alt="Preview image"
+            loading="eager"
+          />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Preview shim: mock brazeBridge */
+    var brazeBridge = {
+      logClick: function (id) { console.log('[Braze Preview] logClick', id || ''); },
+      closeMessage: function () { console.log('[Braze Preview] closeMessage'); },
+      requestImmediateDataFlush: function () {}
+    };
+
+    /* Preview: theme toggle */
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('theme-dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.body.classList.remove('theme-dark');
+      }
+    }
+
+    (function () {
+      var closing = false;
+
+      function closeModal() {
+        if (closing) return;
+        closing = true;
+
+        var overlay = document.getElementById('brazeModalOverlay');
+        if (!overlay) return;
+
+        overlay.classList.add('braze-modal-overlay--closing');
+
+        overlay.addEventListener('animationend', function () {
+          brazeBridge.closeMessage();
+        });
+
+        setTimeout(function () {
+          brazeBridge.closeMessage();
+        }, 300);
+      }
+
+      var closeBtn = document.getElementById('brazeModalClose');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeModal();
+        });
+      }
+
+      var overlay = document.getElementById('brazeModalOverlay');
+      if (overlay) {
+        overlay.addEventListener('click', function (e) {
+          if (e.target === overlay) {
+            closeModal();
+          }
+        });
+      }
+
+      var imgWrapper = document.getElementById('brazeModalImage');
+      if (imgWrapper) {
+        imgWrapper.addEventListener('click', function (e) {
+          if (e.target.closest('#brazeModalClose')) return;
+          console.log('[Braze Preview] Image clicked, would navigate to:', imgWrapper.getAttribute('data-href'));
+          brazeBridge.logClick('cta_click');
+          closeModal();
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
