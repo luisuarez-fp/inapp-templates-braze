@@ -34,7 +34,7 @@ Braze Custom HTML In-App Messages render inside an **iframe** managed by the SDK
 | Modal Image Right | `html/modal-img-right.html` | Horizontal layout — content left, image right (~40/60 split) |
 | Modal Image 50/50 | `html/modal-img-50-50.html` | Horizontal layout — equal 50/50 split between content and image |
 | Modal Onboarding | `html/modal-onboarding.html` | Multi-step carousel with thumbnails for onboarding flows |
-| Modal Launch | `html/modal-launch.html` | Compact card (256×274) with background image, non-blocking overlay |
+| Modal Bottom Right | `html/modal-bottom-right.html` | Compact card (256×274) with background image, non-blocking overlay |
 | Slideup | `html/slideup.html` | Bottom-anchored toast notification with frosted glass effect |
 
 Preview files with hardcoded content for local testing are in `previews/`.
@@ -248,7 +248,7 @@ Templates automatically detect whether Pikaso is running in dark or light mode b
 - **Light mode**: White background, dark text, dark CTA button
 - **Dark mode**: Dark background, light text, light CTA button
 
-Exception: `modal-launch.html` is always dark theme (image card with gradient overlay).
+Exception: `modal-bottom-right.html` is always dark theme (image card with gradient overlay).
 
 ## Design Token Reference
 

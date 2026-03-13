@@ -445,10 +445,8 @@ body {
 }
 
 .ed-modal--full-image .ed-modal__close {
-  top: 12px;
-  right: 12px;
-  background: rgba(13, 13, 13, 0.4);
-  color: #fff;
+  top: -40px;
+  right: -40px;
 }
 
 .ed-modal__image--full {

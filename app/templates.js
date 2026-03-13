@@ -65,11 +65,11 @@ export const TEMPLATES = [
     replacements: fullImageReplacements,
   },
   {
-    id: 'modal-launch',
-    name: 'Modal Launch',
+    id: 'modal-bottom-right',
+    name: 'Modal Bottom Right',
     description: 'Compact card (256x274) with background image, bottom-right',
-    previewFile: 'previews/modal-launch-preview.html',
-    htmlFile: 'html/modal-launch.html',
+    previewFile: 'previews/modal-bottom-right-preview.html',
+    htmlFile: 'html/modal-bottom-right.html',
     fields: [
       { id: 'image_url', type: 'image', label: 'Background Image URL', placeholder: 'https://cdn.braze.eu/appboy/communication/...' },
       { id: 'badge_key', type: 'key', label: 'Badge Text (Lokalise key or text)', placeholder: 'NEW' },

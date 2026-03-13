@@ -44,7 +44,7 @@ const LAUNCH_CSS = `
 
 function getExtraCSS(templateId) {
   if (templateId === 'slideup') return SLIDEUP_CSS;
-  if (templateId === 'modal-launch') return LAUNCH_CSS;
+  if (templateId === 'modal-bottom-right') return LAUNCH_CSS;
   return '';
 }
 
