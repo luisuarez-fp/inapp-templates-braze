@@ -5,14 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>In-App Message</title>
 <style>
-  /* =======================================================================
-     Pikaso Design Tokens — Inlined for Braze iframe isolation
-     Based on Figma: CRM - Inapps
-       Light: node 88-224  |  Dark: node 85-147
-     Theme-aware: detects light/dark from parent app
-     Variant: slideup (toast notification, bottom-anchored, frosted glass)
-     ======================================================================= */
-
   @font-face {
     font-family: 'Inter';
     src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
@@ -31,9 +23,7 @@
     font-display: swap;
   }
 
-  /* =====================================================================
-     Light theme (default) — Figma node 88-224
-     ===================================================================== */
+  /* Light theme (default) */
   :root {
     --toast-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --toast-max-width: 340px;
@@ -61,9 +51,7 @@
     --toast-action-color: #FFFFFF;
   }
 
-  /* =====================================================================
-     Dark theme — Figma node 85-147
-     ===================================================================== */
+  /* Dark theme */
   .dark {
     --toast-bg: rgba(15, 15, 15, 0.50);              /* --alert-base */
     --toast-border: rgba(255, 255, 255, 0.20);       /* --outline-border-alpha-0 */
@@ -81,9 +69,7 @@
     --toast-action-color: #0D0D0D;
   }
 
-  /* =======================================================================
-     Reset & Base
-     ======================================================================= */
+  /* Reset & Base */
 
   *, *::before, *::after {
     margin: 0;
@@ -99,9 +85,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* =======================================================================
-     Toast Container — fixed bottom, centered
-     ======================================================================= */
+  /* Toast Container — fixed bottom, centered */
 
   .braze-toast-anchor {
     position: fixed;
@@ -115,9 +99,7 @@
     pointer-events: none;
   }
 
-  /* =======================================================================
-     Toast Card — frosted glass
-     ======================================================================= */
+  /* Toast Card — frosted glass */
 
   .braze-toast {
     position: relative;
@@ -137,9 +119,7 @@
     animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  /* =======================================================================
-     Header — icon + title row + close button
-     ======================================================================= */
+  /* Header — icon + title row + close button */
 
   .braze-toast__header {
     display: flex;
@@ -169,9 +149,7 @@
     min-width: 0;
   }
 
-  /* =======================================================================
-     Close Button
-     ======================================================================= */
+  /* Close Button */
 
   .braze-toast__close {
     flex-shrink: 0;
@@ -198,9 +176,7 @@
     height: 16px;
   }
 
-  /* =======================================================================
-     Body Text
-     ======================================================================= */
+  /* Body Text */
 
   .braze-toast__text {
     font-size: 0.75rem;          /* 12px — text-xs */
@@ -211,9 +187,7 @@
     padding-left: 34px;          /* icon 24 + gap 10 */
   }
 
-  /* =======================================================================
-     Action Button — secondary solid (Perita Plus sm)
-     ======================================================================= */
+  /* Action Button — secondary solid */
 
   .braze-toast__action {
     display: inline-flex;
@@ -245,9 +219,7 @@
     background: var(--toast-action-bg-active);
   }
 
-  /* =======================================================================
-     Animations
-     ======================================================================= */
+  /* Animations */
 
   @keyframes slideUp {
     from {
@@ -275,9 +247,7 @@
     animation: slideDown 0.2s ease-in forwards;
   }
 
-  /* =======================================================================
-     Responsive — full-width on very small screens
-     ======================================================================= */
+  /* Responsive — full-width on very small screens */
 
   @media (max-width: 375px) {
     .braze-toast-anchor {
@@ -291,18 +261,6 @@
 </style>
 </head>
 <body>
-  <!--
-    Braze Custom HTML In-App Message Template: Slideup (Toast)
-    ===========================================================
-    Design source: Figma CRM - Inapps (light: 88-224, dark: 85-147)
-    Theme: auto-detects light/dark from parent app
-    Translations: replace placeholder keys with your i18n values
-
-    To use this template:
-      1. Replace TITLE_KEY, MESSAGE_KEY, CTA_KEY below with your translation keys
-      2. Optionally set ${cta_url} as a Braze message extra for the action button
-  -->
-
 {%- assign lang = {{custom_attribute.${user_locale}}} | default: ${language} | default: 'en' -%}
 {%- case lang -%}
 {%- when 'es_ES' -%}{%- assign lok_lang = 'es_ES' -%}
@@ -406,11 +364,7 @@
 
   <script>
     (function () {
-      /* -----------------------------------------------------------------
-         Theme detection
-         Reads the parent document's <html> class to match the app theme.
-         Falls back to light mode if parent is inaccessible (cross-origin).
-         ----------------------------------------------------------------- */
+      /* Theme detection */
       try {
         var parentDoc = window.parent.document.documentElement;
         if (parentDoc && parentDoc.classList.contains('dark')) {
@@ -433,9 +387,7 @@
         }
       }
 
-      /* -----------------------------------------------------------------
-         Close toast with slide-down animation
-         ----------------------------------------------------------------- */
+      /* Close toast with slide-down animation */
       function closeToast() {
         if (closing) return;
         closing = true;
@@ -464,9 +416,7 @@
         setTimeout(dismissOnce, 300);
       }
 
-      /* -----------------------------------------------------------------
-         Close button
-         ----------------------------------------------------------------- */
+      /* Close button */
       var closeBtn = document.getElementById('brazeToastClose');
       if (closeBtn) {
         closeBtn.addEventListener('click', function (e) {
@@ -475,9 +425,7 @@
         });
       }
 
-      /* -----------------------------------------------------------------
-         Action button — log click and navigate
-         ----------------------------------------------------------------- */
+      /* Action button — log click and navigate */
       var actionBtn = document.getElementById('brazeToastAction');
       if (actionBtn) {
         actionBtn.addEventListener('click', function (e) {
@@ -501,9 +449,7 @@
         });
       }
 
-      /* -----------------------------------------------------------------
-         Escape key to close
-         ----------------------------------------------------------------- */
+      /* Escape key to close */
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' || e.keyCode === 27) {
           closeToast();

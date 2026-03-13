@@ -4,11 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
-  /* =======================================================================
-     Pikaso Design Tokens — Inlined for Braze iframe isolation
-     Based on Figma: CRM - Inapps (node 30-291)
-     Theme-aware: detects light/dark from parent app
-     ======================================================================= */
 
   @font-face {
     font-family: 'Inter';
@@ -28,10 +23,7 @@
     font-display: swap;
   }
 
-  /* =====================================================================
-     Light theme (default)
-     Resolved from: frontend/code/apps/core/tailwind/tailwind.css :root
-     ===================================================================== */
+  /* Light theme (default) */
   :root {
     --modal-overlay: hsla(0, 0%, 0%, 0.5);
     --modal-radius: 24px;
@@ -56,10 +48,7 @@
     --modal-close-color: hsl(0, 0%, 5%);
   }
 
-  /* =====================================================================
-     Dark theme
-     Resolved from: frontend/code/apps/core/tailwind/tailwind.css .dark
-     ===================================================================== */
+  /* Dark theme */
   .dark {
     --modal-bg: hsl(0, 0%, 12%);
 
@@ -78,9 +67,7 @@
     --modal-close-color: hsl(0, 0%, 97%);
   }
 
-  /* =======================================================================
-     Reset & Base
-     ======================================================================= */
+  /* Reset & Base */
 
   *, *::before, *::after {
     margin: 0;
@@ -97,9 +84,7 @@
     transition: background 0.2s ease;
   }
 
-  /* =======================================================================
-     Overlay
-     ======================================================================= */
+  /* Overlay */
 
   .braze-modal-overlay {
     position: fixed;
@@ -114,9 +99,7 @@
     animation: fadeIn 0.2s ease-out forwards;
   }
 
-  /* =======================================================================
-     Modal Card
-     ======================================================================= */
+  /* Modal Card */
 
   .braze-modal-wrapper {
     position: relative;
@@ -150,9 +133,7 @@
     z-index: 3;
   }
 
-  /* =======================================================================
-     Hero Media (image or video)
-     ======================================================================= */
+  /* Hero Media */
 
   .braze-modal__image-wrapper {
     position: relative;
@@ -169,9 +150,7 @@
     object-fit: cover;
   }
 
-  /* =======================================================================
-     Close Button — outside the card, top-right, 8px from modal edge
-     ======================================================================= */
+  /* Close Button */
 
   .braze-modal__close {
     position: absolute;
@@ -200,9 +179,7 @@
     color: var(--modal-close-color);
   }
 
-  /* =======================================================================
-     Content
-     ======================================================================= */
+  /* Content */
 
   .braze-modal__content {
     padding: 24px;
@@ -226,9 +203,7 @@
     color: var(--modal-text-color);
   }
 
-  /* =======================================================================
-     CTA Button — inside content area, right-aligned
-     ======================================================================= */
+  /* CTA Button */
 
   .braze-modal__cta-wrapper {
     display: flex;
@@ -264,9 +239,7 @@
     background: var(--modal-cta-bg-active);
   }
 
-  /* =======================================================================
-     Animations
-     ======================================================================= */
+  /* Animations */
 
   @keyframes fadeIn {
     from { opacity: 0; }
@@ -312,9 +285,7 @@
     animation: scaleOut 0.15s ease-in forwards;
   }
 
-  /* =======================================================================
-     Responsive
-     ======================================================================= */
+  /* Responsive */
 
   @media (max-width: 640px) {
     .braze-modal-wrapper {
@@ -346,9 +317,7 @@
     }
   }
 
-  /* =======================================================================
-     Preview-only styles
-     ======================================================================= */
+  /* Preview-only styles */
 
   .preview-controls {
     position: fixed;
@@ -471,9 +440,7 @@
     }
 
     (function () {
-      /* -----------------------------------------------------------------
-         Close modal with animation
-         ----------------------------------------------------------------- */
+      /* Close modal with animation */
       function closeModal() {
         var overlay = document.getElementById('brazeModalOverlay');
         if (!overlay) return;

@@ -1,23 +1,4 @@
-/*
- * Pikaso Design System Tokens — Braze Templates Reference
- * =======================================================
- * This file serves as a reference for the resolved design token values
- * used across all Braze Custom HTML In-App Message templates.
- *
- * Design source: Figma CRM - Inapps (node 30-291)
- *
- * Since Braze renders custom HTML inside an iframe, the app's CSS custom
- * properties are NOT inherited. Each template must inline these values.
- *
- * Source files:
- *   - frontend/code/apps/core/tailwind/tailwind.css  (CSS custom properties)
- *   - frontend/code/apps/pikaso/src/perita-tailwind-config/shared/tokens.ts
- *   - frontend/code/apps/core/tailwind/tailwind.config.ts
- */
-
-/* =========================================================================
-   FONTS
-   ========================================================================= */
+/* FONTS */
 
 @font-face {
   font-family: 'Inter';
@@ -46,13 +27,7 @@
   font-display: swap;
 }
 
-/* =========================================================================
-   DESIGN TOKENS — Modal (Figma: CRM - Inapps)
-   =========================================================================
-   The modal content area uses a fixed dark background, independent of the
-   app's light/dark theme. This ensures consistent appearance regardless of
-   the user's current theme setting.
-   ========================================================================= */
+/* DESIGN TOKENS — Modal */
 
 :root {
   /* Modal structure */
@@ -89,9 +64,7 @@
   --modal-line-height-snug: 1.4;
   --modal-line-height-normal: 1.6;
 
-  /* =====================================================================
-     Additional tokens (for future template variants)
-     ===================================================================== */
+  /* Additional tokens */
 
   /* Primary (piki-blue) — for alternate CTA styles */
   --color-primary: hsl(222, 81%, 56%);      /* piki-blue-500 */

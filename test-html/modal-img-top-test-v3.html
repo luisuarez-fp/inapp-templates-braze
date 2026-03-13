@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>In-App Message</title>
 <style>
-  /* =======================================================================
-     Pikaso Design Tokens — Inlined for Braze iframe isolation
-     Based on Figma: CRM - Inapps (node 30-291)
-     Theme-aware: detects light/dark from parent app
-     ======================================================================= */
 
   @font-face {
     font-family: 'Inter';
@@ -29,10 +24,7 @@
     font-display: swap;
   }
 
-  /* =====================================================================
-     Light theme (default)
-     Resolved from: frontend/code/apps/core/tailwind/tailwind.css :root
-     ===================================================================== */
+  /* Light theme (default) */
   :root {
     /* Modal structure */
     --modal-overlay: hsla(0, 0%, 0%, 0.5);
@@ -63,10 +55,7 @@
     --modal-close-color: hsl(0, 0%, 5%);
   }
 
-  /* =====================================================================
-     Dark theme
-     Resolved from: frontend/code/apps/core/tailwind/tailwind.css .dark
-     ===================================================================== */
+  /* Dark theme */
   .dark {
     --modal-bg: hsl(0, 0%, 12%);
 
@@ -85,9 +74,7 @@
     --modal-close-color: hsl(0, 0%, 97%);
   }
 
-  /* =======================================================================
-     Reset & Base
-     ======================================================================= */
+  /* Reset & Base */
 
   *, *::before, *::after {
     margin: 0;
@@ -103,9 +90,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* =======================================================================
-     Overlay
-     ======================================================================= */
+  /* Overlay */
 
   .braze-modal-overlay {
     position: fixed;
@@ -120,9 +105,7 @@
     animation: fadeIn 0.2s ease-out forwards;
   }
 
-  /* =======================================================================
-     Modal Card
-     ======================================================================= */
+  /* Modal Card */
 
   .braze-modal-wrapper {
     position: relative;
@@ -156,9 +139,7 @@
     z-index: 3;
   }
 
-  /* =======================================================================
-     Hero Media (image or video)
-     ======================================================================= */
+  /* Hero Media */
 
   .braze-modal__image-wrapper {
     position: relative;
@@ -175,9 +156,7 @@
     object-fit: cover;
   }
 
-  /* =======================================================================
-     Close Button — outside the card, top-right, 8px from modal edge
-     ======================================================================= */
+  /* Close Button */
 
   .braze-modal__close {
     position: absolute;
@@ -206,9 +185,7 @@
     color: var(--modal-close-color);
   }
 
-  /* =======================================================================
-     Content
-     ======================================================================= */
+  /* Content */
 
   .braze-modal__content {
     padding: 24px;
@@ -232,9 +209,7 @@
     color: var(--modal-text-color);
   }
 
-  /* =======================================================================
-     CTA Button — inside content area, right-aligned
-     ======================================================================= */
+  /* CTA Button */
 
   .braze-modal__cta-wrapper {
     display: flex;
@@ -270,9 +245,7 @@
     background: var(--modal-cta-bg-active);
   }
 
-  /* =======================================================================
-     Animations
-     ======================================================================= */
+  /* Animations */
 
   @keyframes fadeIn {
     from { opacity: 0; }
@@ -318,9 +291,7 @@
     animation: scaleOut 0.15s ease-in forwards;
   }
 
-  /* =======================================================================
-     Responsive
-     ======================================================================= */
+  /* Responsive */
 
   @media (max-width: 640px) {
     .braze-modal__content {
@@ -346,19 +317,6 @@
 </style>
 </head>
 <body>
-  <!--
-    Braze Custom HTML In-App Message Template: Default Modal
-    =========================================================
-    Design source: Figma CRM - Inapps (node 30-291)
-    Theme: auto-detects light/dark from parent app
-    Translations: replace placeholder keys with your i18n values
-
-    To use this template:
-      1. Replace TITLE_KEY, MESSAGE_KEY, CTA_KEY below with your translation keys
-      2. Set ${image_url}, ${image_alt}, ${cta_url} as Braze message extras
-
-    Example keys: 2026_W06_IAM_Onboarding_Spaces_Step1_IAM_Title
-  -->
 
 {%- assign lang = {{custom_attribute.${user_locale}}} | default: ${language} | default: 'en' -%}
 {%- case lang -%}
@@ -470,11 +428,7 @@
 
   <script>
     (function () {
-      /* -----------------------------------------------------------------
-         Theme detection
-         Reads the parent document's <html> class to match the app theme.
-         Falls back to light mode if parent is inaccessible (cross-origin).
-         ----------------------------------------------------------------- */
+      /* Theme detection */
       try {
         var parentDoc = window.parent.document.documentElement;
         if (parentDoc && parentDoc.classList.contains('dark')) {
@@ -499,9 +453,7 @@
         }
       }
 
-      /* -----------------------------------------------------------------
-         Close modal with animation
-         ----------------------------------------------------------------- */
+      /* Close modal with animation */
       function closeModal() {
         if (closing) return;
         closing = true;
@@ -530,9 +482,7 @@
         setTimeout(dismissOnce, 300);
       }
 
-      /* -----------------------------------------------------------------
-         Close button
-         ----------------------------------------------------------------- */
+      /* Close button */
       var closeBtn = document.getElementById('brazeModalClose');
       if (closeBtn) {
         closeBtn.addEventListener('click', function (e) {
@@ -541,9 +491,7 @@
         });
       }
 
-      /* -----------------------------------------------------------------
-         Overlay click (click outside to close)
-         ----------------------------------------------------------------- */
+      /* Overlay click */
       var overlay = document.getElementById('brazeModalOverlay');
       if (overlay) {
         overlay.addEventListener('click', function (e) {
@@ -553,9 +501,7 @@
         });
       }
 
-      /* -----------------------------------------------------------------
-         CTA button — log click and navigate
-         ----------------------------------------------------------------- */
+      /* CTA button */
       var ctaBtn = document.getElementById('brazeModalCta');
       if (ctaBtn) {
         ctaBtn.addEventListener('click', function (e) {
@@ -579,9 +525,7 @@
         });
       }
 
-      /* -----------------------------------------------------------------
-         Image click — same navigation as CTA, tracked separately
-         ----------------------------------------------------------------- */
+      /* Image click */
       var imgWrapper = document.querySelector('.braze-modal__image-wrapper');
       if (imgWrapper) {
         imgWrapper.style.cursor = 'pointer';
@@ -606,9 +550,7 @@
         });
       }
 
-      /* -----------------------------------------------------------------
-         Escape key to close
-         ----------------------------------------------------------------- */
+      /* Escape key */
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' || e.keyCode === 27) {
           closeModal();
