@@ -4,13 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
-  /* =======================================================================
-     Pikaso Design Tokens — Inlined for Braze iframe isolation
-     Based on Figma: CRM - Inapps
-       Light: node 88-224  |  Dark: node 85-147
-     Theme-aware: detects light/dark from parent app
-     Variant: slideup (toast notification, bottom-anchored, frosted glass)
-     ======================================================================= */
 
   @font-face {
     font-family: 'Inter';
@@ -30,9 +23,7 @@
     font-display: swap;
   }
 
-  /* =====================================================================
-     Light theme (default) — Figma node 88-224
-     ===================================================================== */
+  /* Light theme (default) */
   :root {
     --toast-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --toast-max-width: 340px;
@@ -56,9 +47,7 @@
     --toast-action-color: #FFFFFF;
   }
 
-  /* =====================================================================
-     Dark theme — Figma node 85-147
-     ===================================================================== */
+  /* Dark theme */
   .dark {
     --toast-bg: rgba(15, 15, 15, 0.50);
     --toast-border: rgba(255, 255, 255, 0.20);
@@ -76,9 +65,7 @@
     --toast-action-color: #0D0D0D;
   }
 
-  /* =======================================================================
-     Reset & Base
-     ======================================================================= */
+  /* Reset & Base */
 
   *, *::before, *::after {
     margin: 0;
@@ -95,9 +82,7 @@
     transition: background 0.2s ease;
   }
 
-  /* =======================================================================
-     Toast Container — fixed bottom, centered
-     ======================================================================= */
+  /* Toast Container */
 
   .braze-toast-anchor {
     position: fixed;
@@ -111,9 +96,7 @@
     pointer-events: none;
   }
 
-  /* =======================================================================
-     Toast Card — frosted glass
-     ======================================================================= */
+  /* Toast Card */
 
   .braze-toast {
     position: relative;
@@ -133,9 +116,7 @@
     animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  /* =======================================================================
-     Header — icon + title row + close button
-     ======================================================================= */
+  /* Header */
 
   .braze-toast__header {
     display: flex;
@@ -165,9 +146,7 @@
     min-width: 0;
   }
 
-  /* =======================================================================
-     Close Button
-     ======================================================================= */
+  /* Close Button */
 
   .braze-toast__close {
     flex-shrink: 0;
@@ -194,9 +173,7 @@
     height: 16px;
   }
 
-  /* =======================================================================
-     Body Text
-     ======================================================================= */
+  /* Body Text */
 
   .braze-toast__text {
     font-size: 0.75rem;          /* 12px — text-xs */
@@ -207,9 +184,7 @@
     padding-left: 34px;
   }
 
-  /* =======================================================================
-     Action Button — secondary solid (Perita Plus sm)
-     ======================================================================= */
+  /* Action Button */
 
   .braze-toast__action {
     display: inline-flex;
@@ -241,9 +216,7 @@
     background: var(--toast-action-bg-active);
   }
 
-  /* =======================================================================
-     Animations
-     ======================================================================= */
+  /* Animations */
 
   @keyframes slideUp {
     from {
@@ -271,9 +244,7 @@
     animation: slideDown 0.2s ease-in forwards;
   }
 
-  /* =======================================================================
-     Responsive
-     ======================================================================= */
+  /* Responsive */
 
   @media (max-width: 375px) {
     .braze-toast-anchor {
@@ -285,9 +256,7 @@
     }
   }
 
-  /* =======================================================================
-     Preview-only styles
-     ======================================================================= */
+  /* Preview-only styles */
 
   .preview-controls {
     position: fixed;

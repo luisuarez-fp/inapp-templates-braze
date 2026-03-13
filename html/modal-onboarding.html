@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>In-App Message</title>
 <style>
-  /* =======================================================================
-     Pikaso Design Tokens — Inlined for Braze iframe isolation
-     Based on Figma: CRM - Inapps (node 37-159)
-     Theme-aware: detects light/dark from parent app
-     Variant: modal_onboarding (multi-step carousel with thumbnails)
-     ======================================================================= */
-
   @font-face {
     font-family: 'Inter';
     src: url('https://pikaso.cdnpk.net/public/media/Inter-Regular.woff2') format('woff2'),
@@ -30,9 +23,7 @@
     font-display: swap;
   }
 
-  /* =====================================================================
-     Light theme (default)
-     ===================================================================== */
+  /* Light theme (default) */
   :root {
     --modal-overlay: hsla(0, 0%, 0%, 0.5);
     --modal-radius: 24px;
@@ -59,9 +50,7 @@
     --thumb-border-inactive: transparent;
   }
 
-  /* =====================================================================
-     Dark theme
-     ===================================================================== */
+  /* Dark theme */
   .dark {
     --modal-bg: hsl(0, 0%, 12%);
     --modal-title-color: hsl(0, 0%, 97%);
@@ -82,9 +71,7 @@
     --thumb-border-inactive: transparent;
   }
 
-  /* =======================================================================
-     Reset & Base
-     ======================================================================= */
+  /* Reset & Base */
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -96,9 +83,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* =======================================================================
-     Overlay
-     ======================================================================= */
+  /* Overlay */
 
   .braze-modal-overlay {
     position: fixed;
@@ -113,9 +98,7 @@
     animation: fadeIn 0.2s ease-out forwards;
   }
 
-  /* =======================================================================
-     Modal Card — horizontal layout
-     ======================================================================= */
+  /* Modal Card — horizontal layout */
 
   .braze-modal-wrapper {
     position: relative;
@@ -149,9 +132,7 @@
     z-index: 3;
   }
 
-  /* =======================================================================
-     Close Button
-     ======================================================================= */
+  /* Close Button */
 
   .braze-modal__close {
     position: absolute;
@@ -173,9 +154,7 @@
   .braze-modal__close:hover { background: var(--modal-close-bg-hover); }
   .braze-modal__close svg { width: 14px; height: 14px; color: var(--modal-close-color); }
 
-  /* =======================================================================
-     Content — left side, ~45%
-     ======================================================================= */
+  /* Content — left side, ~45% */
 
   .braze-modal__content {
     width: 45%;
@@ -226,9 +205,7 @@
     letter-spacing: 0.05em;
   }
 
-  /* =======================================================================
-     CTA — bottom-right of content area
-     ======================================================================= */
+  /* CTA — bottom-right of content area */
 
   .braze-modal__cta-wrapper {
     display: flex;
@@ -261,9 +238,7 @@
   .braze-modal__cta:hover { background: var(--modal-cta-bg-hover); }
   .braze-modal__cta:active { background: var(--modal-cta-bg-active); }
 
-  /* =======================================================================
-     Carousel — right side, ~55%
-     ======================================================================= */
+  /* Carousel — right side, ~55% */
 
   .braze-modal__carousel {
     flex: 1;
@@ -338,9 +313,7 @@
     display: block;
   }
 
-  /* =======================================================================
-     Animations
-     ======================================================================= */
+  /* Animations */
 
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -359,9 +332,7 @@
   .braze-modal-overlay--closing { animation: fadeOut 0.15s ease-in forwards; }
   .braze-modal-overlay--closing .braze-modal-wrapper { animation: scaleOut 0.15s ease-in forwards; }
 
-  /* =======================================================================
-     Responsive
-     ======================================================================= */
+  /* Responsive */
 
   /* Close button stays above the modal on all screen sizes */
 
@@ -395,20 +366,6 @@
 </style>
 </head>
 <body>
-  <!--
-    Braze Custom HTML In-App Message Template: Onboarding Modal
-    =============================================================
-    Design source: Figma CRM - Inapps (node 37-159)
-    Layout: horizontal — content left, image carousel right
-    Theme: auto-detects light/dark from parent app
-    Steps: configurable via data-step attributes
-
-    To use this template:
-      1. Configure steps in the STEPS array in the <script> section
-      2. Set translation keys in the hidden spans
-      3. Update image URLs for each step
-  -->
-
 {%- assign lang = {{custom_attribute.${user_locale}}} | default: ${language} | default: 'en' -%}
 {%- case lang -%}
 {%- when 'es_ES' -%}{%- assign lok_lang = 'es_ES' -%}
@@ -522,10 +479,7 @@
 
   <script>
     (function () {
-      /* =================================================================
-         STEP CONFIGURATION
-         Replace image URLs, titles, texts, and CTA labels per step.
-         ================================================================= */
+      /* Step configuration */
       var STEPS = [
         {
           media: '${step1_image}',
@@ -579,9 +533,7 @@
 
       var currentStep = 0;
 
-      /* -----------------------------------------------------------------
-         Theme detection
-         ----------------------------------------------------------------- */
+      /* Theme detection */
       try {
         var parentDoc = window.parent.document.documentElement;
         if (parentDoc && parentDoc.classList.contains('dark')) {
@@ -589,9 +541,7 @@
         }
       } catch (e) {}
 
-      /* -----------------------------------------------------------------
-         Build carousel images and thumbnails
-         ----------------------------------------------------------------- */
+      /* Build carousel images and thumbnails */
       var mainContainer = document.getElementById('brazeCarouselMain');
       var thumbContainer = document.getElementById('brazeCarouselThumbs');
 
@@ -626,9 +576,7 @@
         thumbContainer.appendChild(thumb);
       });
 
-      /* -----------------------------------------------------------------
-         Step navigation
-         ----------------------------------------------------------------- */
+      /* Step navigation */
       function goToStep(index) {
         if (index < 0 || index >= STEPS.length) return;
         currentStep = index;
@@ -673,9 +621,7 @@
         if (typeof brazeBridge !== 'undefined') brazeBridge.closeMessage();
       }
 
-      /* -----------------------------------------------------------------
-         Close modal with animation
-         ----------------------------------------------------------------- */
+      /* Close modal with animation */
       function closeModal() {
         if (closing) return;
         closing = true;
