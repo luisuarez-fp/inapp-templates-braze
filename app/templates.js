@@ -51,6 +51,20 @@ export const TEMPLATES = [
     replacements: standardModalReplacements,
   },
   {
+    id: 'modal-full-image',
+    name: 'Modal Full Image',
+    description: 'Full image (600×500) with close button, click to navigate',
+    previewFile: 'previews/modal-full-image-preview.html',
+    htmlFile: 'html/modal-full-image.html',
+    fields: [
+      { id: 'image_url', type: 'image', label: 'Image URL (600×500)', placeholder: 'https://cdn.braze.eu/appboy/communication/...' },
+      { id: 'image_alt', type: 'text', label: 'Image Alt Text', placeholder: 'Descriptive alt text' },
+      { id: 'cta_url', type: 'url', label: 'Click Destination URL', placeholder: '/pikaso/feature' },
+    ],
+    render: renderModalFullImage,
+    replacements: fullImageReplacements,
+  },
+  {
     id: 'modal-launch',
     name: 'Modal Launch',
     description: 'Compact card (256x274) with background image, bottom-right',
@@ -196,6 +210,40 @@ function standardModalReplacements(html, values) {
   if (values.cta_key) html = replaceKey(html, 'CTA_KEY', values.cta_key);
   if (values.cta_url) {
     html = html.replace(/(id="brazeModalCta"[\s\S]*?href=")[^"]*(")/,`$1${values.cta_url}$2`);
+  }
+  return html;
+}
+
+// --- Modal Full Image ---
+
+function renderModalFullImage(values) {
+  return `
+    <div class="ed-modal ed-modal--full-image">
+      <button class="ed-modal__close" aria-label="Close">${CLOSE_ICON}</button>
+      <div class="ed-modal__image ed-modal__image--full" ${editableAttr('image_url', 'image')}>
+        ${mediaTag(values, 'image_url', values.image_alt)}
+      </div>
+    </div>`;
+}
+
+function fullImageReplacements(html, values) {
+  if (values.image_url) {
+    html = html.replace(
+      /(class="braze-modal__image"[\s\S]*?src=")[^"]*(")/,
+      `$1${values.image_url}$2`
+    );
+  }
+  if (values.image_alt) {
+    html = html.replace(
+      /(class="braze-modal__image"[\s\S]*?alt=")[^"]*(")/,
+      `$1${values.image_alt}$2`
+    );
+  }
+  if (values.cta_url) {
+    html = html.replace(
+      /(id="brazeModalImage"[\s\S]*?data-href=")[^"]*(")/,
+      `$1${values.cta_url}$2`
+    );
   }
   return html;
 }
