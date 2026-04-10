@@ -308,7 +308,7 @@ body {
   pointer-events: none;
 }
 
-[data-editable].has-value::before {
+[data-editable][data-field-type="image"].has-value::before {
   content: '';
   position: absolute;
   top: 6px;
@@ -321,6 +321,19 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 10px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+[data-editable].has-value:not([data-field-type="image"])::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--app-success);
+  border-radius: 50%;
   z-index: 10;
   pointer-events: none;
 }

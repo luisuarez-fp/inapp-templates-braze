@@ -1,6 +1,6 @@
 import { initCarousel } from './carousel.js';
 import { initEditor, openTemplate, toggleTheme, getValues, getCurrentTemplate, resetEditor } from './editor.js';
-import { generateHTML, generatePreviewHTML, copyToClipboard, openInNewTab } from './generator.js';
+import { generateHTML, generatePreviewHTML, copyToClipboard, openInNewTab, buildUrlBar } from './generator.js';
 import { getMissingUrlFields } from './templates.js';
 
 const carouselView = document.getElementById('carouselView');
@@ -127,7 +127,8 @@ async function handlePreviewTab() {
   try {
     showToast('Fetching translations...');
     const html = await generatePreviewHTML(tmpl, values);
-    openInNewTab(html);
+    const urlBar = buildUrlBar(tmpl, values);
+    openInNewTab(html, urlBar);
   } catch (err) {
     console.error('Preview error:', err);
     showToast('Error generating preview');

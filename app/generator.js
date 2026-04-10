@@ -27,11 +27,25 @@ export async function generatePreviewHTML(template, values) {
   html = html.replace(/\{%-?[\s\S]*?-%\}/g, '');
 
   html = html.replace(/\$\{(?:image_url|step\d+_image)\}/g, DEFAULT_PREVIEW_IMG);
-  html = html.replace(/\$\{[^}]+\}/g, '');
+  html = html.replace(/="\$\{[^}]+\}"/g, '=""');
+  html = html.replace(/'\$\{[^}]+\}'/g, "''");
 
   html = html.replace(/\n{3,}/g, '\n\n');
 
   return html;
+}
+
+export function buildUrlBar(template, values) {
+  const urls = (template.fields || [])
+    .filter((f) => f.type === 'url')
+    .map((f) => ({ label: f.label, value: values[f.id] || '' }))
+    .filter((u) => u.value);
+
+  if (!urls.length) return '';
+
+  return urls
+    .map((u) => `<span style="color:#9c9c9c">${u.label}:</span> <strong>${u.value}</strong>`)
+    .join('&nbsp;&nbsp;&middot;&nbsp;&nbsp;');
 }
 
 async function fetchTemplate(path) {
@@ -84,9 +98,51 @@ export async function copyToClipboard(text) {
   }
 }
 
-export function openInNewTab(html) {
-  const blob = new Blob([html], { type: 'text/html; charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  window.open(url, '_blank');
-  setTimeout(() => URL.revokeObjectURL(url), 60000);
+export function openInNewTab(html, urlBar = '') {
+  const templateBlob = new Blob([html], { type: 'text/html; charset=utf-8' });
+  const templateUrl = URL.createObjectURL(templateBlob);
+
+  if (!urlBar) {
+    window.open(templateUrl, '_blank');
+    setTimeout(() => URL.revokeObjectURL(templateUrl), 60000);
+    return;
+  }
+
+  const wrapper = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Preview</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+iframe{width:100%;height:100%;border:none}
+.url-toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  padding:10px 20px;
+  background:rgba(30,30,30,.85);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  font:600 12px/1.5 Inter,system-ui,sans-serif;
+  color:rgba(255,255,255,.9);
+  white-space:nowrap;
+  z-index:10;
+  animation:toast-in .3s ease-out;
+  pointer-events:none;
+}
+.url-toast strong{color:#7cacff;font-weight:700}
+.url-toast span{color:rgba(255,255,255,.45)}
+@keyframes toast-in{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+</style></head>
+<body>
+<iframe src="${templateUrl}"></iframe>
+<div class="url-toast">${urlBar}</div>
+</body></html>`;
+
+  const wrapperBlob = new Blob([wrapper], { type: 'text/html; charset=utf-8' });
+  const wrapperUrl = URL.createObjectURL(wrapperBlob);
+  window.open(wrapperUrl, '_blank');
+  setTimeout(() => {
+    URL.revokeObjectURL(wrapperUrl);
+    URL.revokeObjectURL(templateUrl);
+  }, 60000);
 }

@@ -400,7 +400,7 @@
         <div class="braze-modal__image-wrapper">
           <img
             class="braze-modal__image"
-            src="https://cdn.braze.eu/appboy/communication/assets/image_assets/images/69945953c1627f4106e11467/original.png?1771329875"
+            src="${image_url}"
             alt="${image_alt}"
             loading="eager"
           />
@@ -414,7 +414,7 @@
             <a
               class="braze-modal__cta"
               id="brazeModalCta"
-              href="/app"
+              href="${cta_url}"
               role="button"
             >
               {{ t[k_cta] | default: t_en[k_cta] }}

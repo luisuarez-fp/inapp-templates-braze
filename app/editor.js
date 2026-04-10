@@ -76,7 +76,7 @@ function bindEditableRegions(container) {
     const fieldId = el.dataset.editable;
     const fieldType = el.dataset.fieldType;
 
-    if (currentValues[fieldId] && (fieldType === 'image' || fieldType === 'url')) {
+    if (currentValues[fieldId]) {
       el.classList.add('has-value');
     }
 
