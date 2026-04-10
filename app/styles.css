@@ -454,6 +454,25 @@ body {
   aspect-ratio: 6 / 5;
 }
 
+.ed-modal__url-edit {
+  position: relative;
+  margin: 10px 0 0;
+  padding: 6px 8px;
+  min-height: 28px;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--text-muted, #888);
+  word-break: break-all;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.ed-modal__url-edit:hover {
+  color: var(--modal-cta-color, #5b8cff);
+}
+
 /* Launch Modal Replica */
 
 .ed-launch {
@@ -1052,6 +1071,17 @@ body {
 .toast-notification.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.toast-notification.toast-error {
+  background: #d32f2f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-notification.toast-error svg {
+  flex-shrink: 0;
 }
 
 /* Responsive */

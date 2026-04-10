@@ -76,7 +76,7 @@ function bindEditableRegions(container) {
     const fieldId = el.dataset.editable;
     const fieldType = el.dataset.fieldType;
 
-    if (currentValues[fieldId] && fieldType === 'image') {
+    if (currentValues[fieldId] && (fieldType === 'image' || fieldType === 'url')) {
       el.classList.add('has-value');
     }
 
@@ -203,6 +203,13 @@ function openPopover(anchorEl, fieldId, fieldType, previewContainer) {
           <img src="${curVal || ''}" alt="Preview" onerror="this.parentElement.classList.remove('visible')" />
         </div>
       </div>`;
+  } else if (fieldType === 'url') {
+    fieldsHtml = `
+      <div class="popover__field">
+        <label class="popover__label">${field.label}</label>
+        <input class="popover__input" type="url" data-field="${fieldId}"
+          value="${escapeAttr(currentValues[fieldId] || '')}" placeholder="${escapeAttr(field.placeholder || '')}" />
+      </div>`;
   } else if (fieldType === 'cta') {
     const keyField = field;
     const urlFieldId = fieldId.replace('_key', '_url').replace('cta_key', 'cta_url');
@@ -307,8 +314,12 @@ function applyPopoverValues(popover, previewContainer) {
   const inputs = popover.querySelectorAll('.popover__input');
   inputs.forEach((input) => {
     const fid = input.dataset.field;
-    if (fid && input.value.trim()) {
-      currentValues[fid] = input.value.trim();
+    if (!fid) return;
+    const trimmed = input.value.trim();
+    if (trimmed) {
+      currentValues[fid] = trimmed;
+    } else {
+      delete currentValues[fid];
     }
   });
 

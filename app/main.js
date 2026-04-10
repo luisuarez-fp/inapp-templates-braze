@@ -1,6 +1,7 @@
 import { initCarousel } from './carousel.js';
 import { initEditor, openTemplate, toggleTheme, getValues, getCurrentTemplate, resetEditor } from './editor.js';
 import { generateHTML, generatePreviewHTML, copyToClipboard, openInNewTab } from './generator.js';
+import { getMissingUrlFields } from './templates.js';
 
 const carouselView = document.getElementById('carouselView');
 const editorView = document.getElementById('editorView');
@@ -26,11 +27,37 @@ function showView(view) {
   }
 }
 
-function showToast(message) {
+const ERROR_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+
+function showToast(message, { error = false } = {}) {
   clearTimeout(toastTimer);
-  toastEl.textContent = message;
-  toastEl.classList.add('show');
-  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2500);
+  toastEl.classList.remove('show', 'toast-error');
+
+  if (error) {
+    toastEl.innerHTML = `${ERROR_ICON}<span>${message}</span>`;
+    toastEl.classList.add('toast-error');
+  } else {
+    toastEl.innerHTML = message;
+  }
+
+  requestAnimationFrame(() => {
+    toastEl.classList.add('show');
+    toastTimer = setTimeout(() => {
+      toastEl.classList.remove('show');
+      setTimeout(() => toastEl.classList.remove('toast-error'), 250);
+    }, error ? 5000 : 2500);
+  });
+}
+
+function assertUrlsForExport(tmpl, values) {
+  const missing = getMissingUrlFields(tmpl, values);
+  if (missing.length === 0) return true;
+  const detail =
+    missing.length === 1
+      ? missing[0].label
+      : missing.map((m) => m.label).join(', ');
+  showToast(`Set the destination URL before exporting: ${detail}`, { error: true });
+  return false;
 }
 
 function handleTemplateSelect(templateId) {
@@ -77,8 +104,11 @@ async function handleCopyHtml() {
   const tmpl = getCurrentTemplate();
   if (!tmpl) return;
 
+  const values = getValues();
+  if (!assertUrlsForExport(tmpl, values)) return;
+
   try {
-    const html = await generateHTML(tmpl, getValues());
+    const html = await generateHTML(tmpl, values);
     const ok = await copyToClipboard(html);
     showToast(ok ? 'HTML copied to clipboard' : 'Failed to copy');
   } catch (err) {
@@ -91,9 +121,12 @@ async function handlePreviewTab() {
   const tmpl = getCurrentTemplate();
   if (!tmpl) return;
 
+  const values = getValues();
+  if (!assertUrlsForExport(tmpl, values)) return;
+
   try {
     showToast('Fetching translations...');
-    const html = await generatePreviewHTML(tmpl, getValues());
+    const html = await generatePreviewHTML(tmpl, values);
     openInNewTab(html);
   } catch (err) {
     console.error('Preview error:', err);

@@ -11,7 +11,7 @@ export const TEMPLATES = [
       { id: 'title_key', type: 'key', label: 'Title (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_Title' },
       { id: 'text_key', type: 'key', label: 'Body Text (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_Body' },
       { id: 'cta_key', type: 'key', label: 'CTA Label (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_CTA' },
-      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/pikaso/feature' },
+      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/app' },
     ],
     render: (values) => renderModalStandard('img-top', values),
     replacements: standardModalReplacements,
@@ -28,7 +28,7 @@ export const TEMPLATES = [
       { id: 'title_key', type: 'key', label: 'Title (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_Title' },
       { id: 'text_key', type: 'key', label: 'Body Text (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_Body' },
       { id: 'cta_key', type: 'key', label: 'CTA Label (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_CTA' },
-      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/pikaso/feature' },
+      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/app' },
     ],
     render: (values) => renderModalStandard('img-right', values),
     replacements: standardModalReplacements,
@@ -45,7 +45,7 @@ export const TEMPLATES = [
       { id: 'title_key', type: 'key', label: 'Title (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_Title' },
       { id: 'text_key', type: 'key', label: 'Body Text (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_Body' },
       { id: 'cta_key', type: 'key', label: 'CTA Label (Lokalise key)', placeholder: '2026_WXX_IAM_Campaign_CTA' },
-      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/pikaso/feature' },
+      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/app' },
     ],
     render: (values) => renderModalStandard('img-50-50', values),
     replacements: standardModalReplacements,
@@ -59,7 +59,7 @@ export const TEMPLATES = [
     fields: [
       { id: 'image_url', type: 'image', label: 'Image URL (600×500)', placeholder: 'https://cdn.braze.eu/appboy/communication/...' },
       { id: 'image_alt', type: 'text', label: 'Image Alt Text', placeholder: 'Descriptive alt text' },
-      { id: 'cta_url', type: 'url', label: 'Click Destination URL', placeholder: '/pikaso/feature' },
+      { id: 'cta_url', type: 'url', label: 'Click Destination URL', placeholder: '/app' },
     ],
     render: renderModalFullImage,
     replacements: fullImageReplacements,
@@ -76,7 +76,7 @@ export const TEMPLATES = [
       { id: 'title_key', type: 'key', label: 'Title (Lokalise key)', placeholder: '2026_WXX_IAM_Launch_Title' },
       { id: 'text_key', type: 'key', label: 'Body Text (Lokalise key)', placeholder: '2026_WXX_IAM_Launch_Body' },
       { id: 'cta_key', type: 'key', label: 'CTA Label (Lokalise key)', placeholder: '2026_WXX_IAM_Launch_CTA' },
-      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/pikaso/feature' },
+      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/app' },
     ],
     render: renderModalLaunch,
     replacements: launchReplacements,
@@ -103,12 +103,27 @@ export const TEMPLATES = [
       { id: 'title_key', type: 'key', label: 'Title (Lokalise key)', placeholder: '2026_WXX_IAM_Toast_Title' },
       { id: 'message_key', type: 'key', label: 'Message (Lokalise key)', placeholder: '2026_WXX_IAM_Toast_Body' },
       { id: 'cta_key', type: 'key', label: 'CTA Label (Lokalise key)', placeholder: '2026_WXX_IAM_Toast_CTA' },
-      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/pikaso/feature' },
+      { id: 'cta_url', type: 'url', label: 'CTA Destination URL', placeholder: '/app' },
     ],
     render: renderSlideup,
     replacements: slideupReplacements,
   },
 ];
+
+/**
+ * URL fields that must be filled before copying HTML to Braze.
+ * @returns {Array<{ id: string, label: string }>}
+ */
+export function getMissingUrlFields(template, values) {
+  if (!template?.fields) return [];
+  return template.fields
+    .filter((f) => f.type === 'url')
+    .filter((f) => {
+      const v = values[f.id];
+      return v == null || String(v).trim() === '';
+    })
+    .map((f) => ({ id: f.id, label: f.label }));
+}
 
 function buildOnboardingFields() {
   const fields = [
@@ -122,7 +137,7 @@ function buildOnboardingFields() {
       { id: `step${i}_cta_key`, type: 'key', label: `Step ${i} CTA (Lokalise key)`, placeholder: `2026_WXX_IAM_Onboarding_Step${i}_CTA`, step: i },
     );
   }
-  fields.push({ id: 'final_cta_url', type: 'url', label: 'Final Step CTA URL', placeholder: '/pikaso/feature' });
+  fields.push({ id: 'final_cta_url', type: 'url', label: 'Final Step CTA URL', placeholder: '/app' });
   return fields;
 }
 
@@ -216,13 +231,24 @@ function standardModalReplacements(html, values) {
 
 // --- Modal Full Image ---
 
+function escapeHtmlText(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 function renderModalFullImage(values) {
+  const urlLine = values.cta_url
+    ? escapeHtmlText(values.cta_url)
+    : 'Click to set click destination URL';
   return `
     <div class="ed-modal ed-modal--full-image">
       <button class="ed-modal__close" aria-label="Close">${CLOSE_ICON}</button>
       <div class="ed-modal__image ed-modal__image--full" ${editableAttr('image_url', 'image')}>
         ${mediaTag(values, 'image_url', values.image_alt)}
       </div>
+      <p class="ed-modal__url-edit" ${editableAttr('cta_url', 'url')}>${urlLine}</p>
     </div>`;
 }
 
@@ -294,7 +320,10 @@ function launchReplacements(html, values) {
   if (values.text_key) html = replaceKey(html, 'TEXT_KEY', values.text_key);
   if (values.cta_key) html = replaceKey(html, 'CTA_KEY', values.cta_key);
   if (values.cta_url) {
-    html = html.replace(/(id="brazeModalCta"[\s\S]*?href=")[^"]*(")/,`$1${values.cta_url}$2`);
+    html = html.replace(
+      /(id="brazeModalCard"[\s\S]*?data-href=")[^"]*(")/,
+      `$1${values.cta_url}$2`
+    );
   }
   return html;
 }
